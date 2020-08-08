@@ -1,0 +1,101 @@
+{
+  "name": "nge-markdown",
+  "version": "0.0.1",
+  "description": "Marked integration in Angular",
+  "keywords": [
+    "angular",
+    "latex",
+    "highlight",
+    "markdown",
+    "marked"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mciissee/nge-markdown"
+  },
+  "bugs": {
+    "url": "https://github.com/mciissee/nge-markdown/issues"
+  },
+  "homepage": "https://github.com/mciissee/nge-markdown",
+  "author": {
+    "name": "Mamadou Cisse",
+    "email": "mciissee@gmail.com"
+  },
+  "license": "MIT",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "npm run build:lib && npm run build:demo",
+    "build:lib": "ng build nge-markdown",
+    "postbuild": "./scripts/postbuild.sh",
+    "build:demo": "ng build demo --prod --base-href='https://mciissee.github.io/nge-markdown/'",
+    "test": "ng test --code-coverage --watch=false",
+    "lint": "ng lint",
+    "e2e": "ng e2e",
+    "publish:lib": "npm publish ./dist/nge-markdown",
+    "publish:demo": "angular-cli-ghpages --dir=./dist/demo",
+    "format:check": "prettier --list-different 'projects/**/*.ts'",
+    "format:write": "prettier --write 'projects/**/*.ts'",
+    "release": "standard-version"
+  },
+  "dependencies": {
+    "@angular/animations": "~9.1.12",
+    "@angular/common": "~9.1.12",
+    "@angular/compiler": "~9.1.12",
+    "@angular/core": "~9.1.12",
+    "@angular/forms": "~9.1.12",
+    "@angular/platform-browser": "~9.1.12",
+    "@angular/platform-browser-dynamic": "~9.1.12",
+    "@angular/router": "~9.1.12",
+    "marked": "^1.1.1",
+    "rxjs": "~6.5.4",
+    "tslib": "^1.10.0",
+    "zone.js": "~0.10.2"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~0.901.11",
+    "@angular-devkit/build-ng-packagr": "~0.901.11",
+    "@angular/cli": "~9.1.11",
+    "@angular/compiler-cli": "~9.1.12",
+    "@commitlint/cli": "^9.1.2",
+    "@commitlint/config-conventional": "^9.1.1",
+    "@types/jasmine": "~3.5.0",
+    "@types/jasminewd2": "~2.0.3",
+    "@types/marked": "^1.1.0",
+    "@types/node": "^12.11.1",
+    "angular-cli-ghpages": "^0.6.2",
+    "codecov": "^3.7.2",
+    "codelyzer": "^5.1.2",
+    "cz-conventional-changelog": "^3.2.0",
+    "husky": "^4.2.5",
+    "jasmine-core": "~3.5.0",
+    "jasmine-spec-reporter": "~4.2.1",
+    "karma": "~5.0.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage-istanbul-reporter": "~2.1.0",
+    "karma-jasmine": "~3.0.1",
+    "karma-jasmine-html-reporter": "^1.4.2",
+    "ng-packagr": "^9.0.0",
+    "prettier": "^2.0.5",
+    "protractor": "~7.0.0",
+    "standard-version": "^8.0.2",
+    "ts-node": "~8.3.0",
+    "tslint": "~6.1.0",
+    "typescript": "~3.8.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  }
+}
