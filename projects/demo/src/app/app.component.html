@@ -5,7 +5,7 @@
 </nge-markdown>
 <ng-container *ngFor="let item of cheatsheets">
   <section>
-    <h2>{{ item.title }}</h2>
+    <h2>{{ item.title }}</h2>
     <nge-markdown ngPreserveWhitespaces>
       ```
       {{ item.markdown }}
@@ -14,4 +14,3 @@
     <nge-markdown>{{ item.markdown }}</nge-markdown>
   </section>
 </ng-container>
-

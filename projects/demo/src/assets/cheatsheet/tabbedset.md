@@ -1,21 +1,9 @@
-=== CSharp
+=== Tab 1
 
-```csharp
-using System;
-class Program &#123;
+This is tab 1 content
 
-  static void Main() &#123;
-    Console.WriteLine("Hello world");
-  }
+=== Tab 2
 
-}
-```
-
-=== Python
-
-```python
-from random import randint
-print("n = " + randint(0, 10))
-```
+This is tab 2 content
 
 ===
