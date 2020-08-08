@@ -53,6 +53,7 @@ export class NgeMarkdownService {
         );
 
         const markedOptions: marked.MarkedOptions = {
+            gfm: true,
             ...(this.config?.markedOptions || {}),
             renderer,
             tokenizer,
