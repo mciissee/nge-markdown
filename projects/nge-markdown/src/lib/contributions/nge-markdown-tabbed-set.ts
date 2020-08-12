@@ -10,12 +10,12 @@ interface Tab {
 
 export class NgeMarkdownTabbedSet implements NgeMarkdownContribution {
     contribute(modifier: NgeMarkdownModifier) {
-        modifier.addHtmlModifier((root) => {
+        modifier.addHtmlModifier((element) => {
             const open = /^===\s*(.+)/;
             const close = /^===\s*$/;
             const processed: Element[] = [];
             const toRemoves: Element[] = [];
-            root.querySelectorAll('p').forEach((paragraph) => {
+            element.querySelectorAll('p').forEach((paragraph) => {
                 if (processed.indexOf(paragraph) !== -1) {
                     return;
                 }

@@ -1,12 +1,12 @@
 import * as marked from 'marked';
 import { InjectionToken } from '@angular/core';
 
-declare type HtmlModifier = (html: HTMLElement) => void;
-declare type AstModifier = (tokens: marked.TokensList) => marked.TokensList;
-declare type RendererModifier = (renderer: marked.Renderer) => marked.Renderer;
+declare type HtmlModifier = (html: HTMLElement) => void | Promise<void>;
+declare type AstModifier = (tokens: marked.TokensList) => marked.TokensList | Promise<marked.TokensList>;
+declare type RendererModifier = (renderer: marked.Renderer) => marked.Renderer | Promise<marked.Renderer>;
 declare type TokenizerModifier = (
     tokenizer: marked.Tokenizer
-) => marked.Tokenizer;
+) => marked.Tokenizer | Promise<marked.Tokenizer>;
 
 export class NgeMarkdownModifier {
 
@@ -68,13 +68,13 @@ export class NgeMarkdownModifier {
      * @param ast the ast to compute.
      * @returns the computed ast.
      */
-    computeAst(ast: marked.TokensList): marked.TokensList {
+    async computeAst(ast: marked.TokensList): Promise<marked.TokensList> {
         if (ast == null) {
             throw new ReferenceError('argument "tokens" is required');
         }
 
         for (const compute of this.astModifiers) {
-            ast = compute(ast);
+            ast = await compute(ast);
         }
 
         return ast;
@@ -82,19 +82,19 @@ export class NgeMarkdownModifier {
 
     /**
      * Apply the registered html modifier functions to the given html.
-     * @param html the html to compute.
+     * @param element the html element to compute.
      * @returns the computed html.
      */
-    computeHtml(html: HTMLElement): HTMLElement {
-        if (html == null) {
+    async computeHtml(element: HTMLElement): Promise<HTMLElement> {
+        if (element == null) {
             throw new ReferenceError('argument "html" is required');
         }
 
         for (const compute of this.htmlModifiers) {
-            compute(html);
+            await compute(element);
         }
 
-        return html;
+        return element;
     }
 
     /**
@@ -102,13 +102,13 @@ export class NgeMarkdownModifier {
      * @param renderer the renderer to compute.
      * @returns the computed renderer.
      */
-    computeRenderer(renderer: marked.Renderer): marked.Renderer {
+    async computeRenderer(renderer: marked.Renderer): Promise<marked.Renderer> {
         if (renderer == null) {
             throw new ReferenceError('argument "renderer" is required');
         }
 
         for (const compute of this.rendererModifiers) {
-            renderer = compute(renderer);
+            renderer = await compute(renderer);
         }
 
         return renderer;
@@ -119,17 +119,18 @@ export class NgeMarkdownModifier {
      * @param tokenizer the tokenizer to compute.
      * @returns the computed tokenizer.
      */
-    computeTokenizer(tokenizer: marked.Tokenizer): marked.Tokenizer {
+    async computeTokenizer(tokenizer: marked.Tokenizer): Promise<marked.Tokenizer> {
         if (tokenizer == null) {
             throw new ReferenceError('argument "tokenizer" is required');
         }
 
         for (const compute of this.tokeniserModifiers) {
-            tokenizer = compute(tokenizer);
+            tokenizer = await compute(tokenizer);
         }
 
         return tokenizer;
     }
+
 }
 
 export interface NgeMarkdownConfig {

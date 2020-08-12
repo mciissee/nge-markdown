@@ -1,5 +1,7 @@
 Inline `code` has `back-ticks around` it.
 
+`print("Hello world")`
+
 ```javascript
 var s = "JavaScript syntax highlighting";
 alert(s);

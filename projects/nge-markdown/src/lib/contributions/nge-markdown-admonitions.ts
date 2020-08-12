@@ -1,17 +1,21 @@
 import { NgeMarkdownContribution } from './nge-markdown-contribution';
 import { NgeMarkdownModifier } from '../nge-markdown-modifier';
 
+/**
+ * Contribution to add collapsible styled block to markdown syntax.
+ */
 export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
+
     contribute(modifier: NgeMarkdownModifier) {
-        modifier.addHtmlModifier((root) => {
-            const paragraphs = root.querySelectorAll('p');
+        modifier.addHtmlModifier((element) => {
+            const paragraphs = element.querySelectorAll('p');
             const openPattern = /^:::\s+(\w+)\s+(.+)?/;
             const closePattern = /^:::\s*$/;
             paragraphs.forEach((p) => {
                 const text = p.innerHTML;
                 const match = text.match(openPattern);
                 if (match) {
-                    this.defineCssVariables();
+                    this.registerIcons();
 
                     const type = match[1];
                     const title = match[2] || '';
@@ -55,7 +59,7 @@ export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
         });
     }
 
-    private defineCssVariables() {
+    private registerIcons() {
         const vars: Record<string, string> = {
          '--admonition--note': `url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>')`,
          '--admonition--abstract': `url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 5h16v2H4V5m0 4h16v2H4V9m0 4h16v2H4v-2m0 4h10v2H4v-2z"/></svg>')`,
@@ -72,7 +76,6 @@ export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
          '--admonition--chevron-right': ` url('data:image/svg+xml;:charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>')`,
          '--admonition--chevron-down': ` url('data:image/svg+xml;:charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>')`,
         };
-
         const styles = document.body.style;
         Object.keys(vars).forEach(k => {
             if (!styles.getPropertyValue(k)) {

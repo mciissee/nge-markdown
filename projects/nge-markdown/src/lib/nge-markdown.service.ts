@@ -15,10 +15,12 @@ import {
 import { MarkedTokenizer, MarkedRenderer } from './marked-types';
 import * as marked from 'marked';
 
+
 @Injectable({
     providedIn: 'root',
 })
 export class NgeMarkdownService {
+
     constructor(
         @Inject(PLATFORM_ID)
         private readonly platform: object,
@@ -33,7 +35,7 @@ export class NgeMarkdownService {
      * @param options compilation options.
      * @returns AST of the compiled markdown (with the modifications of the contributions).
      */
-    compile(options: NgeMarkdownCompileOptions) {
+    async compile(options: NgeMarkdownCompileOptions) {
         let markdown = this.trimIndentation(options.markdown);
         if (options.isHtmlString) {
             markdown = this.decodeHtml(markdown);
@@ -44,28 +46,28 @@ export class NgeMarkdownService {
             contrib.contribute(modifier);
         });
 
-        const renderer = modifier.computeRenderer(
+        const renderer = await modifier.computeRenderer(
             this.config?.markedOptions?.renderer || new MarkedRenderer()
         );
 
-        const tokenizer = modifier.computeTokenizer(
+        const tokenizer = await modifier.computeTokenizer(
             this.config?.markedOptions?.tokenizer || new MarkedTokenizer()
         );
 
         const markedOptions: marked.MarkedOptions = {
-            gfm: true,
             ...(this.config?.markedOptions || {}),
+            langPrefix: 'language-',
             renderer,
             tokenizer,
         };
 
-        const tokens = modifier.computeAst(
+        const tokens = await modifier.computeAst(
             marked.lexer(markdown, markedOptions)
         );
-        const html = marked.parser(tokens, markedOptions);
 
-        options.target.nativeElement.innerHTML = html;
-        modifier.computeHtml(options.target.nativeElement);
+        options.target.nativeElement.innerHTML = marked.parser(tokens, markedOptions);
+
+        await modifier.computeHtml(options.target.nativeElement);
 
         return tokens;
     }

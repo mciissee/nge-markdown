@@ -3,19 +3,7 @@
 
 :host {
   ::ng-deep {
-    pre code {
-      background: rgb(248, 248, 248) none repeat scroll 0% 0%;
-      padding: 12px 1em;
-      word-break: break-word;
-      box-decoration-break: clone;
-      border-radius: 0.1rem;
-      display: block;
-      overflow-x: auto;
-    }
+    @include nge-md-admonitions;
+    @include nge-md-tabbed-set;
   }
-}
-
-::ng-deep {
-  @include nge-md-admonitions;
-  @include nge-md-tabbed-set;
 }
