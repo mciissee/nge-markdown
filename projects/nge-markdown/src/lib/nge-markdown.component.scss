@@ -1,9 +1,0 @@
-@import './contributions//nge-markdown-admonitions.scss';
-@import './contributions//nge-markdown-tabbed-set.scss';
-
-:host {
-  ::ng-deep {
-    @include nge-md-admonitions;
-    @include nge-md-tabbed-set;
-  }
-}

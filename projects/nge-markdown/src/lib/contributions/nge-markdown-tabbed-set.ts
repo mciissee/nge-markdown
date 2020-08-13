@@ -9,7 +9,9 @@ interface Tab {
 }
 
 export class NgeMarkdownTabbedSet implements NgeMarkdownContribution {
+
     contribute(modifier: NgeMarkdownModifier) {
+        this.createStyleSheet();
         modifier.addHtmlModifier((element) => {
             const open = /^===\s*(.+)/;
             const close = /^===\s*$/;
@@ -94,4 +96,64 @@ export class NgeMarkdownTabbedSet implements NgeMarkdownContribution {
         });
         return tabset;
     }
+
+    private createStyleSheet() {
+        if (document.body.hasAttribute('nge-markdown-tabbed-set')) {
+            return;
+        }
+        document.body.setAttribute('nge-markdown-tabbed-set', '');
+
+        const style = document.createElement('style');
+        style.innerHTML = `
+            /*  TAB SET */
+            .nge-md-tabbed-set {
+                display: flex;
+                position: relative;
+                flex-wrap: wrap;
+            }
+
+            .nge-md-tabbed-set .highlight {
+                background: #ddd;
+            }
+
+            .nge-md-tabbed-set .nge-md-tabbed-content {
+                display: none;
+                order: 99;
+                width: 100%;
+            }
+            .nge-md-tabbed-set .nge-md-tabbed-content :first-child {
+                margin: 0;
+            }
+
+            .nge-md-tabbed-set label {
+                width: auto;
+                padding: 0.25em;
+                font-size: 100%;
+                cursor: pointer;
+            }
+
+            .nge-md-tabbed-set input {
+                position: absolute;
+                opacity: 0;
+            }
+
+            .nge-md-tabbed-set input:nth-child(n+1) {
+                color: #333333;
+            }
+
+            .nge-md-tabbed-set input:nth-child(n+1):checked + label {
+                color: #ff5252;
+                transition: all 0.3s;
+                background-color: rgba(255, 82, 82, 0.1);
+                border-bottom: 1px solid;
+            }
+
+            .nge-md-tabbed-set input:nth-child(n+1):checked + label + .nge-md-tabbed-content {
+                display: block;
+                border-top: 1px solid #F5F5F5;
+            }
+        `;
+        document.body.appendChild(style);
+    }
+
 }

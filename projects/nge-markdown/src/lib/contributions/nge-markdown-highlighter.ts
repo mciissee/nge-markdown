@@ -96,7 +96,6 @@ export class NgeMarkdownHighlighter implements NgeMarkdownContribution {
                 this.loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.21.0/plugins/autolinker/prism-autolinker.min.js'),
                 this.loadStyle('https://cdn.jsdelivr.net/npm/prismjs@1.21.0/plugins/autolinker/prism-autolinker.css'),
             ]);
-
             const prism = (window as any).Prism;
             prism.manual = true;
             resolve(prism);

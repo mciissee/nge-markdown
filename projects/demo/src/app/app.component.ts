@@ -16,6 +16,8 @@ export class AppComponent implements OnInit {
 
     async ngOnInit() {
         const cheatsheets = [
+            'Admonitions',
+            'TabbedSet',
             'Headers',
             'Emphasis',
             'Lists',
@@ -25,8 +27,6 @@ export class AppComponent implements OnInit {
             'Tables',
             'Blockquotes',
             'Horizontal Rule',
-            'Admonitions',
-            'TabbedSet',
         ];
         this.cheatsheets = await Promise.all(cheatsheets.map(async e => {
             const url = 'assets/cheatsheet/' + e.toLowerCase().replace(' ', '-') + '.md';

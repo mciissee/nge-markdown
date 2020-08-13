@@ -19,8 +19,7 @@ import * as marked from 'marked';
 
 @Component({
     selector: 'nge-markdown, [nge-markdown]',
-    template: `<ng-content></ng-content>`,
-    styleUrls: ['./nge-markdown.component.scss'],
+    template: `<ng-content></ng-content>`
 })
 export class NgeMarkdownComponent implements OnChanges, AfterViewInit {
     /** Link to a markdown file to render. */

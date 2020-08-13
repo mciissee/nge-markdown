@@ -1,3 +1,5 @@
+// tslint:disable: max-line-length
+
 import { NgeMarkdownContribution } from './nge-markdown-contribution';
 import { NgeMarkdownModifier } from '../nge-markdown-modifier';
 
@@ -7,6 +9,7 @@ import { NgeMarkdownModifier } from '../nge-markdown-modifier';
 export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
 
     contribute(modifier: NgeMarkdownModifier) {
+        this.createStyleSheet();
         modifier.addHtmlModifier((element) => {
             const paragraphs = element.querySelectorAll('p');
             const openPattern = /^:::\s+(\w+)\s+(.+)?/;
@@ -15,8 +18,6 @@ export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
                 const text = p.innerHTML;
                 const match = text.match(openPattern);
                 if (match) {
-                    this.registerIcons();
-
                     const type = match[1];
                     const title = match[2] || '';
 
@@ -59,8 +60,14 @@ export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
         });
     }
 
-    private registerIcons() {
-        const vars: Record<string, string> = {
+    private createStyleSheet() {
+        if (document.body.hasAttribute('nge-markdown-admonitions')) {
+            return;
+        }
+        document.body.setAttribute('nge-markdown-admonitions', '');
+
+        // CSS VARIABLES
+        const variables: Record<string, string> = {
          '--admonition--note': `url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>')`,
          '--admonition--abstract': `url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 5h16v2H4V5m0 4h16v2H4V9m0 4h16v2H4v-2m0 4h10v2H4v-2z"/></svg>')`,
          '--admonition--info': `url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 9h-2V7h2m0 10h-2v-6h2m-1-9A10 10 0 002 12a10 10 0 0010 10 10 10 0 0010-10A10 10 0 0012 2z"/></svg>')`,
@@ -77,11 +84,149 @@ export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
          '--admonition--chevron-down': ` url('data:image/svg+xml;:charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>')`,
         };
         const styles = document.body.style;
-        Object.keys(vars).forEach(k => {
+        Object.keys(variables).forEach(k => {
             if (!styles.getPropertyValue(k)) {
-                styles.setProperty(k, vars[k]);
+                styles.setProperty(k, variables[k]);
             }
         });
 
+        // STYLESHEET
+        const admonitions: Record<string, { border: string; bg: string; }> = {
+            note: {
+                bg: 'rgba(68, 138, 255, 0.1)',
+                border: '#448aff',
+            },
+            abstract: {
+                bg: 'rgba(0, 176, 255, 0.1)',
+                border: '#00b0ff',
+            },
+            info: {
+                bg: 'rgba(0, 184, 212, 0.1)',
+                border: '#00b8d4',
+            },
+            tip: {
+                bg: 'rgba(0, 191, 165, 0.1)',
+                border: '#00bfa5',
+            },
+            success: {
+                bg: 'rgba(0, 200, 83, 0.1)',
+                border: '#00c853',
+            },
+            question: {
+                bg: 'rgba(100, 221, 23, 0.1)',
+                border: '#64dd17',
+            },
+            warning: {
+                bg: 'rgba(255, 145, 0, 0.1)',
+                border: '#ff9100',
+            },
+            failure: {
+                bg: 'rgba(255, 82, 82, 0.1)',
+                border: '#ff5252',
+            },
+            danger: {
+                bg: 'rgba(255, 23, 68, 0.1)',
+                border: '#ff1744',
+            },
+            bug: {
+                bg: 'rgba(245, 0, 87, 0.1)',
+                border: '#f50057',
+            },
+            example: {
+                bg: 'rgba(101, 31, 255, 0.1)',
+                border: '#651fff',
+            },
+            quote: {
+                bg: 'rgba(158, 158, 158, 0.1)',
+                border: '#9e9e9e',
+            },
+        };
+
+        const stylesheet = [`
+            /* CONTAINER */
+            .nge-md-admonition {
+                margin: 1.5625em 0;
+                overflow: hidden;
+                font-size: 0.64rem;
+                page-break-inside: avoid;
+                border-radius: 0.1rem;
+                box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05), 0 0 0.05rem rgba(0, 0, 0, 0.1);
+            }
+
+            /* TITLE */
+            .nge-md-admonition-title {
+                min-height: 24px;
+                box-sizing: border-box;
+                position: relative;
+                display: flex;
+                align-items: center;
+                margin-top: 0 !important;
+                margin-bottom: 0 !important;
+                padding: 0.4rem 0.6rem 0.4rem 2rem;
+                font-weight: 700;
+            }
+            .nge-md-admonition-title:focus {
+                outline: none;
+            }
+            .nge-md-admonition-title::-webkit-details-marker {
+                display: none;
+            }
+
+            /* TITLE COLLAPSIBLE */
+
+            details .nge-md-admonition-title {
+                cursor: pointer;
+            }
+            details .nge-md-admonition-title:after {
+                position: absolute;
+                right: 0.6rem;
+                width: 1rem;
+                height: 1rem;
+                -o-mask-image: var(--admonition--chevron-right);
+                -webkit-mask-image: var(--admonition--chevron-right);
+                mask-image: var(--admonition--chevron-right);
+                content: "";
+            }
+            details[open] .nge-md-admonition-title:after {
+                -o-mask-image: var(--admonition--chevron-down);
+                -webkit-mask-image: var(--admonition--chevron-down);
+                mask-image: var(--admonition--chevron-down);
+            }
+
+            /* CONTENT */
+            .nge-md-admonition-content {
+                padding: 0 0.6rem;
+            }
+        `];
+
+        Object.keys(admonitions).forEach(type => {
+            const map = admonitions[type];
+            stylesheet.push(`
+                .nge-md-admonition--${type} {
+                    border-left: 0.2rem solid ${map.border};
+                }
+                .nge-md-admonition--${type} .nge-md-admonition-title {
+                    background-color: ${map.bg};
+                }
+                .nge-md-admonition--${type} .nge-md-admonition-title:before,
+                .nge-md-admonition--${type} .nge-md-admonition-title:after {
+                    background-color: ${map.border};
+                }
+                .nge-md-admonition--${type} .nge-md-admonition-title:before {
+                    position: absolute;
+                    left: 0.6rem;
+                    width: 1rem;
+                    height: 1rem;
+                    -o-mask-image: var(--admonition--${type});
+                    -webkit-mask-image: var(--admonition--${type});
+                    mask-image: var(--admonition--${type});
+                    content: "";
+                }
+            `);
+        });
+        const style = document.createElement('style');
+        style.innerHTML = stylesheet.join('\n');
+        document.body.appendChild(style);
     }
+
 }
