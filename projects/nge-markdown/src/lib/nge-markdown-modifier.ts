@@ -1,5 +1,4 @@
 import * as marked from 'marked';
-import { InjectionToken } from '@angular/core';
 
 declare type HtmlModifier = (html: HTMLElement) => void | Promise<void>;
 declare type AstModifier = (tokens: marked.TokensList) => marked.TokensList | Promise<marked.TokensList>;
@@ -132,11 +131,3 @@ export class NgeMarkdownModifier {
     }
 
 }
-
-export interface NgeMarkdownConfig {
-    markedOptions?: marked.MarkedOptions;
-}
-
-export const NGE_MARKDOWN_CONFIG = new InjectionToken<NgeMarkdownConfig>(
-    'NGE_MARKDOWN_CONFIG'
-);

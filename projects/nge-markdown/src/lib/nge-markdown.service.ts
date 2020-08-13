@@ -7,13 +7,10 @@ import {
     Optional,
 } from '@angular/core';
 import { NgeMarkdownContribution } from './contributions/nge-markdown-contribution';
-import {
-    NgeMarkdownModifier,
-    NgeMarkdownConfig,
-    NGE_MARKDOWN_CONFIG,
-} from './nge-markdown-modifier';
+import { NgeMarkdownModifier } from './nge-markdown-modifier';
 import { MarkedTokenizer, MarkedRenderer } from './marked-types';
 import * as marked from 'marked';
+import { NGE_MARKDOWN_CONFIG, NgeMarkdownConfig } from './nge-markdown-config';
 
 
 @Injectable({
