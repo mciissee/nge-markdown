@@ -6,7 +6,9 @@ let prismLoaderPromise: Promise<any> | undefined;
 /**
  * Contribution to add Prism syntax highlighter.
  */
-export class NgeMarkdownHighlighter implements NgeMarkdownContribution {
+export class NgeMarkdownPrismHighlighter implements NgeMarkdownContribution {
+
+    private readonly PRISM_URL = 'https://cdn.jsdelivr.net/npm/prismjs@1.21.0/';
 
     contribute(modifier: NgeMarkdownModifier) {
         this.addRenderers(modifier);
@@ -57,7 +59,6 @@ export class NgeMarkdownHighlighter implements NgeMarkdownContribution {
                 return `<pre class="${classes.join(' ')}" ${attribs.join(' ')}><code>${code}</code></pre>`;
             };
             renderer.codespan = (code) => {
-                console.log(code);
                 return `<code class="language-none">${code}</code>`;
             };
             return renderer;
@@ -66,35 +67,41 @@ export class NgeMarkdownHighlighter implements NgeMarkdownContribution {
 
     private addHighlighter(modifier: NgeMarkdownModifier) {
         modifier.addHtmlModifier(async (element) => {
-            const prism = await this.loadPrism();
+            const prism = await this.requirePrism();
             prism.highlightAllUnder(element);
         });
     }
 
-    private loadPrism() {
+    private requirePrism() {
         if (prismLoaderPromise) {
             return prismLoaderPromise;
         }
 
+        if ('Prism' in window) {
+            const prism = (window as any).Prism;
+            prism.manual = true;
+            return prismLoaderPromise = Promise.resolve(prism);
+        }
+
         return prismLoaderPromise = new Promise<any>(async resolve => {
             await Promise.all([
-                this.loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.21.0/components/prism-core.js'),
-                this.loadStyle('https://cdn.jsdelivr.net/npm/prismjs@1.21.0/themes/prism.css'),
-
-                // https://prismjs.com/plugins/auto-loader/
-                this.loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.21.0/plugins/autoloader/prism-autoloader.min.js'),
-
-                // https://prismjs.com/plugins/line-numbers/
-                this.loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.21.0/plugins/line-numbers/prism-line-numbers.min.js'),
-                this.loadStyle('https://cdn.jsdelivr.net/npm/prismjs@1.21.0/plugins/line-numbers/prism-line-numbers.css'),
-
-                // https://prismjs.com/plugins/line-highlight/
-                this.loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.21.0/plugins/line-highlight/prism-line-highlight.min.js'),
-                this.loadStyle('https://cdn.jsdelivr.net/npm/prismjs@1.21.0/plugins/line-highlight/prism-line-highlight.css'),
+                this.addScript(this.PRISM_URL + 'components/prism-core.js'),
+                this.addStyle(this.PRISM_URL + 'themes/prism.css'),
 
                 // https://prismjs.com/plugins/autolinker/
-                this.loadScript('https://cdn.jsdelivr.net/npm/prismjs@1.21.0/plugins/autolinker/prism-autolinker.min.js'),
-                this.loadStyle('https://cdn.jsdelivr.net/npm/prismjs@1.21.0/plugins/autolinker/prism-autolinker.css'),
+                this.addScript(this.PRISM_URL + 'plugins/autolinker/prism-autolinker.min.js'),
+                this.addStyle(this.PRISM_URL + 'plugins/autolinker/prism-autolinker.css'),
+
+                // https://prismjs.com/plugins/auto-loader/
+                this.addScript(this.PRISM_URL + 'plugins/autoloader/prism-autoloader.min.js'),
+
+                // https://prismjs.com/plugins/line-numbers/
+                this.addScript(this.PRISM_URL + 'plugins/line-numbers/prism-line-numbers.min.js'),
+                this.addStyle(this.PRISM_URL + 'plugins/line-numbers/prism-line-numbers.css'),
+
+                // https://prismjs.com/plugins/line-highlight/
+                this.addScript(this.PRISM_URL + 'plugins/line-highlight/prism-line-highlight.min.js'),
+                this.addStyle(this.PRISM_URL + 'plugins/line-highlight/prism-line-highlight.css'),
             ]);
             const prism = (window as any).Prism;
             prism.manual = true;
@@ -102,7 +109,7 @@ export class NgeMarkdownHighlighter implements NgeMarkdownContribution {
         });
     }
 
-    private loadStyle(url: string) {
+    private addStyle(url: string) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
         link.href = url;
@@ -113,7 +120,7 @@ export class NgeMarkdownHighlighter implements NgeMarkdownContribution {
         });
     }
 
-    private loadScript(url: string) {
+    private addScript(url: string) {
         const script = document.createElement('script');
         script.type = 'text/javascript';
         script.src = url;

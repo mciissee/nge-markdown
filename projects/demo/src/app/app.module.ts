@@ -7,7 +7,7 @@ import {
     NgeMarkdownAdmonitions,
     NgeMarkdownTabbedSet,
     NgeMarkdownLinkFragment,
-    NgeMarkdownHighlighter,
+    NgeMarkdownPrismHighlighter,
 } from 'nge-markdown';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -39,7 +39,7 @@ import { AppComponent } from './app.component';
         {
             provide: NGE_MARKDOWN_CONTRIBUTION,
             multi: true,
-            useClass: NgeMarkdownHighlighter,
+            useClass: NgeMarkdownPrismHighlighter,
         },
     ],
     bootstrap: [AppComponent],
