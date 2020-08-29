@@ -17,6 +17,9 @@ export class AppComponent implements OnInit {
     async ngOnInit() {
         const cheatsheets = [
             'Admonitions',
+            'Emoji',
+            'Latex',
+            'Admonitions',
             'TabbedSet',
             'Headers',
             'Emphasis',

@@ -2,13 +2,14 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {
+    NGE_MARKDOWN_CONFIG,
+    NgeMarkdownConfig,
     NgeMarkdownModule,
     NgeMarkdownTabbedSetProvider,
     NgeMarkdownAdmonitionsProvider,
     NgeMarkdownFragmentProvider,
-    NGE_MARKDOWN_CONFIG,
-    NgeMarkdownConfig,
     NgeMarkdownKatexProvider,
+    NgeMarkdownEmojiProvider,
 } from 'nge-markdown';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -33,6 +34,7 @@ import { NgeMonacoModule, NgeMonacoColorizerService, NGE_THEMES } from 'nge-mona
         NgeMarkdownAdmonitionsProvider,
         NgeMarkdownFragmentProvider,
         NgeMarkdownKatexProvider,
+        NgeMarkdownEmojiProvider,
         {
             provide: NGE_MARKDOWN_CONFIG,
             useValue: {
