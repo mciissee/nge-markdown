@@ -4,7 +4,7 @@ import { NgeMarkdownModifier } from '../nge-markdown-modifier';
 import { NgeMarkdownContribution } from './nge-markdown-contribution';
 
 /**
- * Contribution to add and abstract syntax highlighter.
+ * Contribution to add an abstract syntax highlighter.
  */
 export class NgeMarkdownHighlighter implements NgeMarkdownContribution {
 

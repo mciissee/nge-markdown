@@ -8,6 +8,7 @@ import {
     NgeMarkdownFragmentProvider,
     NGE_MARKDOWN_CONFIG,
     NgeMarkdownConfig,
+    NgeMarkdownKatexProvider,
 } from 'nge-markdown';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -31,6 +32,7 @@ import { NgeMonacoModule, NgeMonacoColorizerService, NGE_THEMES } from 'nge-mona
         NgeMarkdownTabbedSetProvider,
         NgeMarkdownAdmonitionsProvider,
         NgeMarkdownFragmentProvider,
+        NgeMarkdownKatexProvider,
         {
             provide: NGE_MARKDOWN_CONFIG,
             useValue: {
