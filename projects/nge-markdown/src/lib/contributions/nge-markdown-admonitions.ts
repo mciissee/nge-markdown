@@ -1,7 +1,8 @@
 // tslint:disable: max-line-length
 
-import { NgeMarkdownContribution } from './nge-markdown-contribution';
+import { Provider } from '@angular/core';
 import { NgeMarkdownModifier } from '../nge-markdown-modifier';
+import { NgeMarkdownContribution, NGE_MARKDOWN_CONTRIBUTION } from './nge-markdown-contribution';
 
 /**
  * Contribution to add collapsible styled block to markdown syntax.
@@ -230,3 +231,12 @@ export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
     }
 
 }
+
+/**
+ * Provider to add collapsible styled block to markdown syntax.
+ */
+export const NgeMarkdownAdmonitionsProvider: Provider = {
+    provide: NGE_MARKDOWN_CONTRIBUTION,
+    multi: true,
+    useClass: NgeMarkdownAdmonitions,
+};

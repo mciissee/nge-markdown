@@ -1,6 +1,6 @@
 {
   "name": "nge-markdown",
-  "version": "0.0.1",
+  "version": "0.0.1-beta.1",
   "description": "Marked integration in Angular",
   "keywords": [
     "angular",
@@ -26,7 +26,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "npm run build:lib && npm run build:demo",
-    "build:lib": "ng build nge-markdown",
+    "build:lib": "ng build nge-markdown --prod",
     "postbuild": "./scripts/postbuild.sh",
     "build:demo": "ng build demo --prod --base-href='https://mciissee.github.io/nge-markdown/'",
     "test": "ng test --code-coverage --watch=false",
@@ -48,6 +48,8 @@
     "@angular/platform-browser-dynamic": "~9.1.12",
     "@angular/router": "~9.1.12",
     "marked": "^1.1.1",
+    "monaco-editor": "^0.20.0",
+    "nge-monaco": "0.0.2",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

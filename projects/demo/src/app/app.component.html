@@ -6,7 +6,7 @@
 <ng-container *ngFor="let item of cheatsheets">
   <section>
     <h2>{{ item.title }}</h2>
-    <pre class="language-none">{{ item.markdown }}</pre>
+    <nge-monaco-viewer [code]="item.markdown"></nge-monaco-viewer>
     <nge-markdown ngPreserveWhitespaces>{{ item.markdown }}</nge-markdown>
   </section>
 </ng-container>

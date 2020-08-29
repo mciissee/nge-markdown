@@ -1,6 +1,27 @@
 {
   "name": "nge-markdown",
-  "version": "0.0.1",
+  "version": "0.0.1-beta.1",
+  "description": "Marked integration in Angular",
+  "keywords": [
+    "angular",
+    "latex",
+    "highlight",
+    "markdown",
+    "marked"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mciissee/nge-markdown"
+  },
+  "bugs": {
+    "url": "https://github.com/mciissee/nge-markdown/issues"
+  },
+  "homepage": "https://github.com/mciissee/nge-markdown",
+  "author": {
+    "name": "Mamadou Cisse",
+    "email": "mciissee@gmail.com"
+  },
+  "license": "MIT",
   "peerDependencies": {
     "@angular/common": "^9.1.12",
     "@angular/core": "^9.1.12"

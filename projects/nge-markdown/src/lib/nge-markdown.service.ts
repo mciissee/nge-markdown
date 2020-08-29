@@ -1,17 +1,16 @@
-import { isPlatformBrowser } from '@angular/common';
 import {
+    ElementRef,
     Inject,
     Injectable,
-    PLATFORM_ID,
-    ElementRef,
+    Injector,
     Optional,
 } from '@angular/core';
 import { NgeMarkdownContribution } from './contributions/nge-markdown-contribution';
+import { NgeMarkdownHighlighter } from './contributions/nge-markdown-highlighter';
+import { MarkedRenderer, MarkedTokenizer } from './marked-types';
+import { NgeMarkdownConfig, NGE_MARKDOWN_CONFIG } from './nge-markdown-config';
 import { NgeMarkdownModifier } from './nge-markdown-modifier';
-import { MarkedTokenizer, MarkedRenderer } from './marked-types';
 import * as marked from 'marked';
-import { NGE_MARKDOWN_CONFIG, NgeMarkdownConfig } from './nge-markdown-config';
-
 
 @Injectable({
     providedIn: 'root',
@@ -19,12 +18,10 @@ import { NGE_MARKDOWN_CONFIG, NgeMarkdownConfig } from './nge-markdown-config';
 export class NgeMarkdownService {
 
     constructor(
-        @Inject(PLATFORM_ID)
-        private readonly platform: object,
-
         @Optional()
         @Inject(NGE_MARKDOWN_CONFIG)
-        private readonly config: NgeMarkdownConfig
+        private readonly config: NgeMarkdownConfig,
+        private readonly injector: Injector
     ) {}
 
     /**
@@ -38,21 +35,11 @@ export class NgeMarkdownService {
             markdown = this.decodeHtml(markdown);
         }
 
-        const modifier = new NgeMarkdownModifier();
-        (options.contributions || []).forEach((contrib) => {
-            contrib.contribute(modifier);
-        });
-
-        const renderer = await modifier.computeRenderer(
-            this.config?.markedOptions?.renderer || new MarkedRenderer()
-        );
-
-        const tokenizer = await modifier.computeTokenizer(
-            this.config?.markedOptions?.tokenizer || new MarkedTokenizer()
-        );
-
+        const modifier = this.createModifier(options);
+        const renderer = await this.createRenderer(modifier);
+        const tokenizer = await this.createTokenizer(modifier);
         const markedOptions: marked.MarkedOptions = {
-            ...(this.config?.markedOptions || {}),
+            ...(this.config || {}),
             langPrefix: 'language-',
             renderer,
             tokenizer,
@@ -62,22 +49,56 @@ export class NgeMarkdownService {
             marked.lexer(markdown, markedOptions)
         );
 
-        options.target.nativeElement.innerHTML = marked.parser(tokens, markedOptions);
+        options.target.nativeElement.innerHTML = marked.parser(
+            tokens,
+            markedOptions
+        );
 
         await modifier.computeHtml(options.target.nativeElement);
 
         return tokens;
     }
 
+    private createModifier(options: NgeMarkdownCompileOptions) {
+        const contributions = [...(options.contributions || [])];
+        if (this.config?.highlightCodeElement) {
+            contributions.push(new NgeMarkdownHighlighter(this.injector));
+        }
+
+        const modifier = new NgeMarkdownModifier();
+        contributions.forEach((contrib) => {
+            contrib.contribute(modifier);
+        });
+
+        return modifier;
+    }
+
+    private async createRenderer(modifier: NgeMarkdownModifier) {
+        const renderer = await modifier.computeRenderer(
+            this.config?.renderer || new MarkedRenderer()
+        );
+        if (this.config?.codeSpanClassList) {
+            renderer.codespan = (code) => `
+            <code class="${this.config.codeSpanClassList}">
+                ${code}
+            </code>
+            `;
+        }
+        return renderer;
+    }
+
+    private async createTokenizer(modifier: NgeMarkdownModifier) {
+        return await modifier.computeTokenizer(
+            this.config?.tokenizer || new MarkedTokenizer()
+        );
+    }
+
     // https://github.com/jfcere/ngx-markdown/blob/master/lib/src/markdown.service.ts
 
     private decodeHtml(html: string): string {
-        if (isPlatformBrowser(this.platform)) {
-            const textarea = document.createElement('textarea');
-            textarea.innerHTML = html;
-            return textarea.value;
-        }
-        return html;
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = html;
+        return textarea.value;
     }
 
     private trimIndentation(markdown: string): string {

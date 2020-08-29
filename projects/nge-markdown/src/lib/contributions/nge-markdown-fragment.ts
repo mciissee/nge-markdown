@@ -1,7 +1,8 @@
-import { NgeMarkdownContribution } from './nge-markdown-contribution';
+import { NgeMarkdownContribution, NGE_MARKDOWN_CONTRIBUTION } from './nge-markdown-contribution';
 import { NgeMarkdownModifier } from '../nge-markdown-modifier';
+import { Provider } from '@angular/core';
 
-export class NgeMarkdownLinkFragment implements NgeMarkdownContribution {
+export class NgeMarkdownFragment implements NgeMarkdownContribution {
     contribute(modifier: NgeMarkdownModifier) {
         modifier.addRendererModifier((renderer) => {
             // https://github.com/jfcere/ngx-markdown/issues/161
@@ -16,3 +17,9 @@ export class NgeMarkdownLinkFragment implements NgeMarkdownContribution {
         });
     }
 }
+
+export const NgeMarkdownFragmentProvider: Provider = {
+    provide: NGE_MARKDOWN_CONTRIBUTION,
+    multi: true,
+    useClass: NgeMarkdownFragment,
+};

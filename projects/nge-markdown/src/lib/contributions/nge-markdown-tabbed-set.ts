@@ -1,5 +1,6 @@
-import { NgeMarkdownContribution } from './nge-markdown-contribution';
+import { Provider } from '@angular/core';
 import { NgeMarkdownModifier } from '../nge-markdown-modifier';
+import { NgeMarkdownContribution, NGE_MARKDOWN_CONTRIBUTION } from './nge-markdown-contribution';
 
 let TABSET_COUNTER = 0;
 
@@ -157,3 +158,9 @@ export class NgeMarkdownTabbedSet implements NgeMarkdownContribution {
     }
 
 }
+
+export const NgeMarkdownTabbedSetProvider: Provider = {
+    provide: NGE_MARKDOWN_CONTRIBUTION,
+    multi: true,
+    useClass: NgeMarkdownTabbedSet,
+};
