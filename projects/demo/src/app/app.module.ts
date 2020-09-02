@@ -14,6 +14,7 @@ import {
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgeMonacoModule, NgeMonacoColorizerService, NGE_THEMES } from 'nge-monaco';
+import { NGE_MARKDOWN_HIGHLIGHTER_CONFIG, NgeMarkdownHighlighterConfig, NgeMarkdownHighlighterProvider } from 'projects/nge-markdown/src/lib/contributions/nge-markdown-highlighter';
 
 @NgModule({
     declarations: [AppComponent],
@@ -35,11 +36,12 @@ import { NgeMonacoModule, NgeMonacoColorizerService, NGE_THEMES } from 'nge-mona
         NgeMarkdownFragmentProvider,
         NgeMarkdownKatexProvider,
         NgeMarkdownEmojiProvider,
+        NgeMarkdownHighlighterProvider,
         {
-            provide: NGE_MARKDOWN_CONFIG,
+            provide: NGE_MARKDOWN_HIGHLIGHTER_CONFIG,
             useValue: {
                 codeSpanClassList: 'monaco-editor monaco-editor-background',
-                highlightCodeElement: async (injector, options) => {
+                highligtht: async (injector, options) => {
                     const colorizer = injector.get(NgeMonacoColorizerService, null);
                     const code = options.element;
                     const pre = code.parentElement as HTMLElement;
@@ -58,7 +60,7 @@ import { NgeMonacoModule, NgeMonacoColorizerService, NGE_THEMES } from 'nge-mona
                     pre.style.overflow = 'auto';
                     pre.style.border = '1px solid #F2F2F2';
                 }
-            } as NgeMarkdownConfig
+            } as NgeMarkdownHighlighterConfig
         }
     ],
     bootstrap: [AppComponent],

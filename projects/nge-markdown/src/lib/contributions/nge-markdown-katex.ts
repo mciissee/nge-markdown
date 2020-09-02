@@ -2,7 +2,7 @@ import { Provider } from '@angular/core';
 import { NgeMarkdownModifier } from '../nge-markdown-modifier';
 import {
     NgeMarkdownContribution,
-    NGE_MARKDOWN_CONTRIBUTION,
+    NGE_MARKDOWN_CONTRIBUTION
 } from './nge-markdown-contribution';
 
 let katexLoaderPromise: Promise<any> | undefined;
@@ -14,15 +14,28 @@ export class NgeMarkdownKatex implements NgeMarkdownContribution {
 
     contribute(modifier: NgeMarkdownModifier) {
         modifier.addHtmlModifier(async (element) => {
-            const katex = await this.requireKatex();
-            element.innerHTML = element.innerHTML.replace(
-                /\$([^\s][^$]*?[^\s])\$/gm,
-                (_, tex) => katex.renderToString(tex, {})
+            const katex = await this.getOrLoadKatexLib();
+            // pattern to search multiline latex between $$...$$ or inline latex between $...$
+            const pattern = /(^\$\$(\n(.|\n)+?\n)\$\$)|(\$([^\s][^$]*?[^\s])\$)/gm;
+            element.innerHTML = element
+                .innerHTML
+                .replace(pattern, (match) => {
+                    if (match.startsWith('$$')) {
+                        return katex.renderToString(
+                            // remove $$ from the start and end of the match
+                            match.substring(2, match.length - 2)
+                        );
+                    }
+                    return katex.renderToString(
+                        // remove $ from the start and the end of the match
+                        match.substring(1, match.length - 1)
+                    );
+                }
             );
         });
     }
 
-    private requireKatex() {
+    private getOrLoadKatexLib() {
         if (katexLoaderPromise) {
             return katexLoaderPromise;
         }

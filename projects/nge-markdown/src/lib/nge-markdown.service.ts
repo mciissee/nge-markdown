@@ -2,16 +2,17 @@ import {
     ElementRef,
     Inject,
     Injectable,
-    Injector,
-    Optional,
+    Optional
 } from '@angular/core';
+import * as marked from 'marked';
 import { NgeMarkdownContribution } from './contributions/nge-markdown-contribution';
-import { NgeMarkdownHighlighter } from './contributions/nge-markdown-highlighter';
 import { MarkedRenderer, MarkedTokenizer } from './marked-types';
 import { NgeMarkdownConfig, NGE_MARKDOWN_CONFIG } from './nge-markdown-config';
 import { NgeMarkdownModifier } from './nge-markdown-modifier';
-import * as marked from 'marked';
 
+/**
+ * Markdown compiler service.
+ */
 @Injectable({
     providedIn: 'root',
 })
@@ -21,16 +22,16 @@ export class NgeMarkdownService {
         @Optional()
         @Inject(NGE_MARKDOWN_CONFIG)
         private readonly config: NgeMarkdownConfig,
-        private readonly injector: Injector
     ) {}
 
     /**
      * Compiles a markdown string to an html string.
      * @param options compilation options.
-     * @returns AST of the compiled markdown (with the modifications of the contributions).
+     * @returns A promise that resolve with the AST of the compiled markdown
+     * (with the modifications of the contributions).
      */
     async compile(options: NgeMarkdownCompileOptions) {
-        let markdown = this.trimIndentation(options.markdown);
+        let markdown = this.trimIndent(options.markdown);
         if (options.isHtmlString) {
             markdown = this.decodeHtml(markdown);
         }
@@ -59,31 +60,10 @@ export class NgeMarkdownService {
         return tokens;
     }
 
-    private createModifier(options: NgeMarkdownCompileOptions) {
-        const contributions = [...(options.contributions || [])];
-        if (this.config?.highlightCodeElement) {
-            contributions.push(new NgeMarkdownHighlighter(this.injector));
-        }
-
-        const modifier = new NgeMarkdownModifier();
-        contributions.forEach((contrib) => {
-            contrib.contribute(modifier);
-        });
-
-        return modifier;
-    }
-
     private async createRenderer(modifier: NgeMarkdownModifier) {
         const renderer = await modifier.computeRenderer(
             this.config?.renderer || new MarkedRenderer()
         );
-        if (this.config?.codeSpanClassList) {
-            renderer.codespan = (code) => `
-            <code class="${this.config.codeSpanClassList}">
-                ${code}
-            </code>
-            `;
-        }
         return renderer;
     }
 
@@ -93,7 +73,14 @@ export class NgeMarkdownService {
         );
     }
 
-    // https://github.com/jfcere/ngx-markdown/blob/master/lib/src/markdown.service.ts
+    private createModifier(options: NgeMarkdownCompileOptions) {
+        const contributions = [...(options.contributions || [])];
+        const modifier = new NgeMarkdownModifier();
+        contributions.forEach((contrib) => {
+            contrib.contribute(modifier);
+        });
+        return modifier;
+    }
 
     private decodeHtml(html: string): string {
         const textarea = document.createElement('textarea');
@@ -101,10 +88,11 @@ export class NgeMarkdownService {
         return textarea.value;
     }
 
-    private trimIndentation(markdown: string): string {
+    private trimIndent(markdown: string): string {
         if (!markdown) {
             return '';
         }
+
         let indentStart: number;
         return markdown
             .split('\n')
@@ -122,8 +110,12 @@ export class NgeMarkdownService {
             })
             .join('\n');
     }
+
 }
 
+/**
+ * Parameters of NgeMarkdownService `compile` method.
+ */
 interface NgeMarkdownCompileOptions {
     /** Markdown string to compile. */
     markdown: string;

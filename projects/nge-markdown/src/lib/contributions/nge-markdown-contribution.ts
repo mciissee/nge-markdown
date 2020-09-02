@@ -5,4 +5,6 @@ export interface NgeMarkdownContribution {
     contribute(computer: NgeMarkdownModifier): void;
 }
 
-export const NGE_MARKDOWN_CONTRIBUTION = new InjectionToken<NgeMarkdownContribution>('NGE_MARKDOWN_CONTRIBUTION');
+export const NGE_MARKDOWN_CONTRIBUTION = new InjectionToken<
+    NgeMarkdownContribution
+>('NGE_MARKDOWN_CONTRIBUTION');
