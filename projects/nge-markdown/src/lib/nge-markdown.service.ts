@@ -40,6 +40,7 @@ export class NgeMarkdownService {
         const renderer = await this.createRenderer(modifier);
         const tokenizer = await this.createTokenizer(modifier);
         const markedOptions: marked.MarkedOptions = {
+            gfm: true,
             ...(this.config || {}),
             langPrefix: 'language-',
             renderer,
@@ -50,6 +51,9 @@ export class NgeMarkdownService {
             marked.lexer(markdown, markedOptions)
         );
 
+        if (markdown.includes('Colons can be used to align columns.')) {
+            console.log(tokens);
+        }
         options.target.nativeElement.innerHTML = marked.parser(
             tokens,
             markedOptions
