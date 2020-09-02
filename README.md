@@ -1,27 +1,61 @@
-# NgeMarkdown
+# Getting started
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.11.
+nge-markdown is an [Angular](https://angular.io) markdown parser library based on [Marked](https://github.com/markedjs/marked) project.
 
-## Development server
+## Demonstration
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Live demonstration available at [https://mciissee.github.io/nge-markdown/](https://mciissee.github.io/nge-markdown/)
 
-## Code scaffolding
+Open a terminal and clone this repository
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```shell
+git clone https://github.com/mciissee/nge-markdown
+```
 
-## Build
+Go to nge-markdown folder
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+```shell
+cd nge-markdown
+```
 
-## Running unit tests
+Install the dependencies from package.json
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```shell
+npm install
+```
 
-## Running end-to-end tests
+Start the development server and open [http://localhost:4200/](http://localhost:4200/)
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+```shell
+npm start
+```
 
-## Further help
+## Docs
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Documentation available at [https://mciissee.github.io/nge-markdown/](https://mciissee.github.io/nge-markdown/)
+
+## Contribution
+
+Contributions are always welcome. <br/>
+
+Please read our [CONTRIBUTING.md](https://github.com/mciissee/nge-markdown/blob/master/CONTRIBUTING.md) first. You can submit any ideas as [pull requests](https://github.com/mciissee/nge-markdown/pulls) or as [GitHub issues](https://github.com/mciissee/nge-markdown/issues).
+
+Please just make sure that ...
+
+Your code style matches with the rest of the project
+
+Unit tests pass
+
+Linter passes
+
+## Support Development
+
+The use of this library is totally free and no donation is required.
+
+As the owner and primary maintainer of this project, I am putting a lot of time and effort beside my job, my family and my private time to bring the best support I can by answering questions, addressing issues and improving the library to provide more and more features over time.
+
+If this project has been useful, that it helped you or your business to save precious time, don't hesitate to give it a star and to consider a donation to support its maintenance and future development.
+
+## License
+
+MIT © [Mamadou Cisse](https://github.com/mciissee)
