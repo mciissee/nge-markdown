@@ -51,9 +51,6 @@ export class NgeMarkdownService {
             marked.lexer(markdown, markedOptions)
         );
 
-        if (markdown.includes('Colons can be used to align columns.')) {
-            console.log(tokens);
-        }
         options.target.nativeElement.innerHTML = marked.parser(
             tokens,
             markedOptions
