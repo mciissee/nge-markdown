@@ -6,6 +6,7 @@ export * from './lib/contributions/nge-markdown-admonitions';
 export * from './lib/contributions/nge-markdown-contribution';
 export * from './lib/contributions/nge-markdown-emoji';
 export * from './lib/contributions/nge-markdown-fragment';
+export * from './lib/contributions/nge-markdown-highlighter';
 export * from './lib/contributions/nge-markdown-katex';
 export * from './lib/contributions/nge-markdown-tabbed-set';
 export * from './lib/marked-types';
