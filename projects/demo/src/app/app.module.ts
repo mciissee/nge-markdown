@@ -7,7 +7,7 @@ import {
     NgeMarkdownModule,
     NgeMarkdownTabbedSetProvider,
     NgeMarkdownAdmonitionsProvider,
-    NgeMarkdownFragmentProvider,
+    NgeMarkdownLinkAnchorProvider,
     NgeMarkdownKatexProvider,
     NgeMarkdownEmojiProvider,
 } from 'nge-markdown';
@@ -33,7 +33,7 @@ import { NGE_MARKDOWN_HIGHLIGHTER_CONFIG, NgeMarkdownHighlighterConfig, NgeMarkd
     providers: [
         NgeMarkdownTabbedSetProvider,
         NgeMarkdownAdmonitionsProvider,
-        NgeMarkdownFragmentProvider,
+        NgeMarkdownLinkAnchorProvider,
         NgeMarkdownKatexProvider,
         NgeMarkdownEmojiProvider,
         NgeMarkdownHighlighterProvider,
