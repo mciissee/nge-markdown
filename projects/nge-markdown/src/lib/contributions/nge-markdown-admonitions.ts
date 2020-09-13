@@ -1,17 +1,16 @@
 // tslint:disable: max-line-length
 
 import { Provider } from '@angular/core';
-import { NgeMarkdownModifier } from '../nge-markdown-modifier';
+import { NgeMarkdown } from '../nge-markdown';
 import { NgeMarkdownContribution, NGE_MARKDOWN_CONTRIBUTION } from './nge-markdown-contribution';
 
 /**
  * Contribution to add collapsible styled block to markdown syntax.
  */
 export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
-
-    contribute(modifier: NgeMarkdownModifier) {
+    contribute(api: NgeMarkdown) {
         this.createStyleSheet();
-        modifier.addHtmlModifier((element) => {
+        api.addHtmlModifier((element) => {
             const paragraphs = element.querySelectorAll('p');
             const openPattern = /^:::\s+(\w+)\s+(.+)?/;
             const closePattern = /^:::\s*$/;

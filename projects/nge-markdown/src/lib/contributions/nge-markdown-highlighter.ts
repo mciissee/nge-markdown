@@ -6,7 +6,7 @@ import {
     Inject,
     Optional,
 } from '@angular/core';
-import { NgeMarkdownModifier } from '../nge-markdown-modifier';
+import { NgeMarkdown } from '../nge-markdown';
 import {
     NgeMarkdownContribution,
     NGE_MARKDOWN_CONTRIBUTION,
@@ -28,13 +28,13 @@ export class NgeMarkdownHighlighter implements NgeMarkdownContribution {
         private readonly config: NgeMarkdownHighlighterConfig
     ) {}
 
-    contribute(modifier: NgeMarkdownModifier) {
-        this.addRenderers(modifier);
-        this.addModifiers(modifier);
+    contribute(api: NgeMarkdown) {
+        this.addRenderers(api);
+        this.addModifiers(api);
     }
 
-    private addRenderers(modifier: NgeMarkdownModifier) {
-        modifier.addRendererModifier((renderer) => {
+    private addRenderers(api: NgeMarkdown) {
+        api.addRendererModifier((renderer) => {
             renderer.code = (code, args) => {
                 args = args || '';
                 const attributes = new Map<string, string>();
@@ -74,13 +74,13 @@ export class NgeMarkdownHighlighter implements NgeMarkdownContribution {
         });
     }
 
-    private addModifiers(modifier: NgeMarkdownModifier) {
+    private addModifiers(api: NgeMarkdown) {
         if (!this.config?.highligtht) {
             return;
         }
 
         const highlight = this.config.highligtht;
-        modifier.addHtmlModifier(async (element) => {
+        api.addHtmlModifier(async (element) => {
             const preElements = Array.from(
                 element.querySelectorAll(`pre[${DATA_LANGUAGE}]`)
             );

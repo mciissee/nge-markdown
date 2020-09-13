@@ -1,5 +1,5 @@
 import { Provider } from '@angular/core';
-import { NgeMarkdownModifier } from '../nge-markdown-modifier';
+import { NgeMarkdown } from '../nge-markdown';
 import {
     NgeMarkdownContribution,
     NGE_MARKDOWN_CONTRIBUTION
@@ -11,9 +11,8 @@ let katexLoaderPromise: Promise<any> | undefined;
  * Contribution to render math expressions in markdown using [Katex](https://katex.org) library.
  */
 export class NgeMarkdownKatex implements NgeMarkdownContribution {
-
-    contribute(modifier: NgeMarkdownModifier) {
-        modifier.addHtmlModifier(async (element) => {
+    contribute(api: NgeMarkdown) {
+        api.addHtmlModifier(async (element) => {
             const katex = await this.getOrLoadKatexLib();
             // pattern to search multiline latex between $$...$$ or inline latex between $...$
             const pattern = /(^\$\$(\n(.|\n)+?\n)\$\$)|(\$([^\s][^$]*?[^\s])\$)/gm;

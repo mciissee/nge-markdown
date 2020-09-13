@@ -3,7 +3,7 @@ import {
     Injectable, Provider
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgeMarkdownModifier } from '../nge-markdown-modifier';
+import { NgeMarkdown } from '../nge-markdown';
 import {
     NgeMarkdownContribution,
     NGE_MARKDOWN_CONTRIBUTION
@@ -19,8 +19,8 @@ export class NgeMarkdownLinkAnchor implements NgeMarkdownContribution {
         private readonly location: Location,
     ) {}
 
-    contribute(modifier: NgeMarkdownModifier) {
-        modifier.addRendererModifier(renderer => {
+    contribute(api: NgeMarkdown) {
+        api.addRendererModifier(renderer => {
             renderer.link = (href: string, _: string, text: string) => {
                 const attributes = new Map<string, string>();
                 if (href.startsWith('#')) {

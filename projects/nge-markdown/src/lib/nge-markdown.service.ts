@@ -8,7 +8,7 @@ import * as marked from 'marked';
 import { NgeMarkdownContribution } from './contributions/nge-markdown-contribution';
 import { MarkedRenderer, MarkedTokenizer } from './marked-types';
 import { NgeMarkdownConfig, NGE_MARKDOWN_CONFIG } from './nge-markdown-config';
-import { NgeMarkdownModifier } from './nge-markdown-modifier';
+import { NgeMarkdown } from './nge-markdown';
 
 /**
  * Markdown compiler service.
@@ -36,9 +36,9 @@ export class NgeMarkdownService {
             markdown = this.decodeHtml(markdown);
         }
 
-        const modifier = this.createModifier(options);
-        const renderer = await this.createRenderer(modifier);
-        const tokenizer = await this.createTokenizer(modifier);
+        const api = this.createApi(options);
+        const renderer = await this.createRenderer(api);
+        const tokenizer = await this.createTokenizer(api);
         const markedOptions: marked.MarkedOptions = {
             gfm: true,
             ...(this.config || {}),
@@ -47,7 +47,7 @@ export class NgeMarkdownService {
             tokenizer,
         };
 
-        const tokens = await modifier.computeAst(
+        const tokens = await api.computeAst(
             marked.lexer(markdown, markedOptions)
         );
 
@@ -56,27 +56,27 @@ export class NgeMarkdownService {
             markedOptions
         );
 
-        await modifier.computeHtml(options.target.nativeElement);
+        await api.computeHtml(options.target.nativeElement);
 
         return tokens;
     }
 
-    private async createRenderer(modifier: NgeMarkdownModifier) {
+    private async createRenderer(modifier: NgeMarkdown) {
         const renderer = await modifier.computeRenderer(
             this.config?.renderer || new MarkedRenderer()
         );
         return renderer;
     }
 
-    private async createTokenizer(modifier: NgeMarkdownModifier) {
+    private async createTokenizer(modifier: NgeMarkdown) {
         return await modifier.computeTokenizer(
             this.config?.tokenizer || new MarkedTokenizer()
         );
     }
 
-    private createModifier(options: NgeMarkdownCompileOptions) {
+    private createApi(options: NgeMarkdownCompileOptions) {
         const contributions = [...(options.contributions || [])];
-        const modifier = new NgeMarkdownModifier();
+        const modifier = new NgeMarkdown();
         contributions.forEach((contrib) => {
             contrib.contribute(modifier);
         });

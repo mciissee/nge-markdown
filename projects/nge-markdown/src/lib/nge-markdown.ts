@@ -7,7 +7,10 @@ declare type TokenizerModifier = (
     tokenizer: marked.Tokenizer
 ) => marked.Tokenizer | Promise<marked.Tokenizer>;
 
-export class NgeMarkdownModifier {
+/**
+ * Nge markdown api to contribute.
+ */
+export class NgeMarkdown {
 
     private readonly astModifiers: AstModifier[] = [];
     private readonly htmlModifiers: HtmlModifier[] = [];

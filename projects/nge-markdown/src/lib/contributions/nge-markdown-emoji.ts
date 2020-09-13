@@ -1,5 +1,5 @@
 import { Provider } from '@angular/core';
-import { NgeMarkdownModifier } from '../nge-markdown-modifier';
+import { NgeMarkdown } from '../nge-markdown';
 import {
     NgeMarkdownContribution,
     NGE_MARKDOWN_CONTRIBUTION,
@@ -11,8 +11,8 @@ let joypixelsLoaderPromise: Promise<any> | undefined;
  * Contribution to emoji in markdown using [emoji-toolkit](https://github.com/joypixels/emoji-toolkit) library.
  */
 export class NgeMarkdownEmoji implements NgeMarkdownContribution {
-    contribute(modifier: NgeMarkdownModifier) {
-        modifier.addHtmlModifier(async (element) => {
+    contribute(api: NgeMarkdown) {
+        api.addHtmlModifier(async (element) => {
             const joypixels = await this.requireJoypixels();
             element.innerHTML = joypixels.shortnameToUnicode(element.innerHTML);
         });

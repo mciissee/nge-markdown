@@ -1,5 +1,5 @@
 import { Provider } from '@angular/core';
-import { NgeMarkdownModifier } from '../nge-markdown-modifier';
+import { NgeMarkdown } from '../nge-markdown';
 import { NgeMarkdownContribution, NGE_MARKDOWN_CONTRIBUTION } from './nge-markdown-contribution';
 
 let TABSET_COUNTER = 0;
@@ -10,10 +10,9 @@ interface Tab {
 }
 
 export class NgeMarkdownTabbedSet implements NgeMarkdownContribution {
-
-    contribute(modifier: NgeMarkdownModifier) {
+    contribute(api: NgeMarkdown) {
         this.createStyleSheet();
-        modifier.addHtmlModifier((element) => {
+        api.addHtmlModifier((element) => {
             const open = /^===\s*(.+)/;
             const close = /^===\s*$/;
             const processed: Element[] = [];
