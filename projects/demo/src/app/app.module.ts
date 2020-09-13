@@ -11,13 +11,13 @@ import {
     NgeMarkdownKatexProvider,
     NgeMarkdownEmojiProvider,
 } from 'nge-markdown';
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule, A, B } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgeMonacoModule, NgeMonacoColorizerService, NGE_THEMES } from 'nge-monaco';
 import { NGE_MARKDOWN_HIGHLIGHTER_CONFIG, NgeMarkdownHighlighterConfig, NgeMarkdownHighlighterProvider } from 'nge-markdown';
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [AppComponent, A, B],
     imports: [
         BrowserModule,
         HttpClientModule,

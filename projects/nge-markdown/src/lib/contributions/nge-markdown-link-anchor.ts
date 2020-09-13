@@ -1,23 +1,58 @@
-import { NgeMarkdownContribution, NGE_MARKDOWN_CONTRIBUTION } from './nge-markdown-contribution';
+import { Location } from '@angular/common';
+import {
+    Injectable, Provider
+} from '@angular/core';
+import { Router } from '@angular/router';
 import { NgeMarkdownModifier } from '../nge-markdown-modifier';
-import { Provider } from '@angular/core';
+import {
+    NgeMarkdownContribution,
+    NGE_MARKDOWN_CONTRIBUTION
+} from './nge-markdown-contribution';
 
+/**
+ * Contribution to handle fragment navigation in anchor elements.
+ */
+@Injectable()
 export class NgeMarkdownLinkAnchor implements NgeMarkdownContribution {
+    constructor(
+        private readonly router: Router,
+        private readonly location: Location,
+    ) {}
+
     contribute(modifier: NgeMarkdownModifier) {
-        modifier.addRendererModifier((renderer) => {
-            // https://github.com/jfcere/ngx-markdown/issues/161
-            renderer.link = (href: string, title: string, text: string) => {
+        modifier.addRendererModifier(renderer => {
+            renderer.link = (href: string, _: string, text: string) => {
+                const attributes = new Map<string, string>();
                 if (href.startsWith('#')) {
-                    const fragment = href.split('#')[1];
-                    return `<a href="${location.pathname}#${fragment}">${text}</a>`;
+                    href = this.location.path() + href;
                 }
-                return `<a href="${href}" target="_blank" >${text}</a>`;
+                attributes.set('href', href);
+
+                // open in new tab if its a link external to the application
+                const routes = (this.router.config || []).map(config => {
+                    if (!config.path?.startsWith('/')) {
+                        return '/' + config.path;
+                    }
+                    return config.path;
+                });
+                if (!routes.find(route => href.startsWith(route))) {
+                    attributes.set('target', '_blank');
+                }
+
+                return `<a ${
+                    Array.from(attributes.entries()).map(entry => {
+                        return entry[0] + '=' + entry[1];
+                    }).join(' ')
+                }>${text}</a>`;
             };
             return renderer;
         });
     }
 }
 
+/**
+ * Provider to handle fragment navigation in anchor elements.
+ */
 export const NgeMarkdownLinkAnchorProvider: Provider = {
     provide: NGE_MARKDOWN_CONTRIBUTION,
     multi: true,
