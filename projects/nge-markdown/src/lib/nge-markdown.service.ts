@@ -61,15 +61,15 @@ export class NgeMarkdownService {
         return tokens;
     }
 
-    private async createRenderer(modifier: NgeMarkdown) {
-        const renderer = await modifier.computeRenderer(
+    private async createRenderer(api: NgeMarkdown) {
+        const renderer = await api.computeRenderer(
             this.config?.renderer || new MarkedRenderer()
         );
         return renderer;
     }
 
-    private async createTokenizer(modifier: NgeMarkdown) {
-        return await modifier.computeTokenizer(
+    private async createTokenizer(api: NgeMarkdown) {
+        return await api.computeTokenizer(
             this.config?.tokenizer || new MarkedTokenizer()
         );
     }
