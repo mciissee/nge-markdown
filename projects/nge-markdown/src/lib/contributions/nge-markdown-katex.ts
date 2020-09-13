@@ -15,7 +15,7 @@ export class NgeMarkdownKatex implements NgeMarkdownContribution {
         api.addHtmlModifier(async (element) => {
             const katex = await this.getOrLoadKatexLib();
             // pattern to search multiline latex between $$...$$ or inline latex between $...$
-            const pattern = /(^\$\$(\n(.|\n)+?\n)\$\$)|(\$([^\s][^$]*?[^\s])\$)/gm;
+            const pattern = /(\$\$\n((.|\s|\n)+?)\n\$\$)|(\$([^\s][^$\n]+?[^\s])\$)/gm;
             element.innerHTML = element
                 .innerHTML
                 .replace(pattern, (match) => {

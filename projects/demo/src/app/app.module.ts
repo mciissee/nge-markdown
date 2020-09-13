@@ -2,8 +2,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {
-    NGE_MARKDOWN_CONFIG,
-    NgeMarkdownConfig,
     NgeMarkdownModule,
     NgeMarkdownTabbedSetProvider,
     NgeMarkdownAdmonitionsProvider,
@@ -11,13 +9,13 @@ import {
     NgeMarkdownKatexProvider,
     NgeMarkdownEmojiProvider,
 } from 'nge-markdown';
-import { AppRoutingModule, A, B } from './app-routing.module';
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgeMonacoModule, NgeMonacoColorizerService, NGE_THEMES } from 'nge-monaco';
 import { NGE_MARKDOWN_HIGHLIGHTER_CONFIG, NgeMarkdownHighlighterConfig, NgeMarkdownHighlighterProvider } from 'nge-markdown';
 
 @NgModule({
-    declarations: [AppComponent, A, B],
+    declarations: [AppComponent],
     imports: [
         BrowserModule,
         HttpClientModule,
@@ -25,7 +23,7 @@ import { NGE_MARKDOWN_HIGHLIGHTER_CONFIG, NgeMarkdownHighlighterConfig, NgeMarkd
         NgeMonacoModule.forRoot({
             theming: {
                 themes: NGE_THEMES.map(theme => 'assets/themes/' + theme),
-                default: 'one-dark-pro'
+                default: 'vs'
             }
         }),
         AppRoutingModule,
