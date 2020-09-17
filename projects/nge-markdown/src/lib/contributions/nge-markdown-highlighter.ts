@@ -63,13 +63,6 @@ export class NgeMarkdownHighlighter implements NgeMarkdownContribution {
                     .join(' ');
                 return `<pre ${attribs}><code>${code}</code></pre>`;
             };
-            if (this.config?.codeSpanClassList) {
-                renderer.codespan = (code) => `
-                <code class="${this.config.codeSpanClassList}">
-                    ${code}
-                </code>
-                `;
-            }
             return renderer;
         });
     }
@@ -153,8 +146,6 @@ export interface NgeMarkdownHighlightOptions {
 }
 
 export interface NgeMarkdownHighlighterConfig {
-    /** A space separated list of css classes names to add to codespan elements.  */
-    codeSpanClassList?: string;
     /**
      * Function called to hightlight an HTMLElement code.
      * @param injector Injector reference to use Angular dependency injection.

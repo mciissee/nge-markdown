@@ -24,6 +24,7 @@ export class AppComponent implements OnInit {
             'Headers',
             'Emphasis',
             'Lists',
+            'Task List',
             'Links',
             'Images',
             'Code',

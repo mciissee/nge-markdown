@@ -23,7 +23,7 @@ import { NGE_MARKDOWN_HIGHLIGHTER_CONFIG, NgeMarkdownHighlighterConfig, NgeMarkd
         NgeMonacoModule.forRoot({
             theming: {
                 themes: NGE_THEMES.map(theme => 'assets/themes/' + theme),
-                default: 'vs'
+                default: 'one-dark-pro'
             }
         }),
         AppRoutingModule,
@@ -38,7 +38,6 @@ import { NGE_MARKDOWN_HIGHLIGHTER_CONFIG, NgeMarkdownHighlighterConfig, NgeMarkd
         {
             provide: NGE_MARKDOWN_HIGHLIGHTER_CONFIG,
             useValue: {
-                codeSpanClassList: 'monaco-editor monaco-editor-background',
                 highligtht: async (injector, options) => {
                     const colorizer = injector.get(NgeMonacoColorizerService, null);
                     const code = options.element;

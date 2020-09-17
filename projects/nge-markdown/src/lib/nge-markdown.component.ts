@@ -4,6 +4,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    HostBinding,
     Inject,
     Input,
     OnChanges,
@@ -19,7 +20,8 @@ import * as marked from 'marked';
 
 @Component({
     selector: 'nge-markdown, [nge-markdown]',
-    template: `<ng-content></ng-content>`
+    template: `<ng-content></ng-content>`,
+    styleUrls: ['nge-markdown.component.scss']
 })
 export class NgeMarkdownComponent implements OnChanges, AfterViewInit {
     /** Link to a markdown file to render. */
@@ -27,6 +29,11 @@ export class NgeMarkdownComponent implements OnChanges, AfterViewInit {
 
     /** Markdown string to render. */
     @Input() data?: string;
+
+    /** Theme to apply to the markdown content. */
+    @Input()
+    @HostBinding('class')
+    theme: 'github' | 'none' = 'github';
 
     /**
      * An event that emit after each rendering pass
