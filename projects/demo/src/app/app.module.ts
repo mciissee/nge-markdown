@@ -24,7 +24,7 @@ import { NGE_MARKDOWN_HIGHLIGHTER_CONFIG, NgeMarkdownHighlighterConfig, NgeMarkd
         NgeMonacoModule.forRoot({
             theming: {
                 themes: NGE_THEMES.map(theme => 'assets/themes/' + theme),
-                default: 'one-dark-pro'
+                default: 'github'
             }
         }),
         AppRoutingModule,
