@@ -127,8 +127,10 @@ export class NgeMarkdownTabbedSet implements NgeMarkdownContribution {
 
             .nge-md-tabbed-set label {
                 width: auto;
-                padding: 0.25em;
-                font-size: 100%;
+                /*padding: 0.25em;*/
+                padding: .9375em 1.25em .78125em;
+                font-weight: 700;
+                font-size: .84rem;
                 cursor: pointer;
             }
 
@@ -144,8 +146,8 @@ export class NgeMarkdownTabbedSet implements NgeMarkdownContribution {
             .nge-md-tabbed-set input:nth-child(n+1):checked + label {
                 color: #ff5252;
                 transition: all 0.3s;
-                background-color: rgba(255, 82, 82, 0.1);
-                border-bottom: 1px solid;
+                /* background-color: rgba(255, 82, 82, 0.1);*/
+                border-bottom: .1rem solid;
             }
 
             .nge-md-tabbed-set input:nth-child(n+1):checked + label + .nge-md-tabbed-content {
