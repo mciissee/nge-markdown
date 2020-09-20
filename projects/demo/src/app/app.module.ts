@@ -8,6 +8,7 @@ import {
     NgeMarkdownLinkAnchorProvider,
     NgeMarkdownKatexProvider,
     NgeMarkdownEmojiProvider,
+    NgeMarkdownIconsProvider,
 } from 'nge-markdown';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -29,11 +30,12 @@ import { NGE_MARKDOWN_HIGHLIGHTER_CONFIG, NgeMarkdownHighlighterConfig, NgeMarkd
         AppRoutingModule,
     ],
     providers: [
-        NgeMarkdownTabbedSetProvider,
-        NgeMarkdownAdmonitionsProvider,
-        NgeMarkdownLinkAnchorProvider,
         NgeMarkdownKatexProvider,
+        NgeMarkdownIconsProvider,
         NgeMarkdownEmojiProvider,
+        NgeMarkdownTabbedSetProvider,
+        NgeMarkdownLinkAnchorProvider,
+        NgeMarkdownAdmonitionsProvider,
         NgeMarkdownHighlighterProvider,
         {
             provide: NGE_MARKDOWN_HIGHLIGHTER_CONFIG,

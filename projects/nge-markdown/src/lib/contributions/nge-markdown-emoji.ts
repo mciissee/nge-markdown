@@ -2,36 +2,36 @@ import { Provider } from '@angular/core';
 import { NgeMarkdown } from '../nge-markdown';
 import {
     NgeMarkdownContribution,
-    NGE_MARKDOWN_CONTRIBUTION,
+    NGE_MARKDOWN_CONTRIBUTION
 } from './nge-markdown-contribution';
 
-let joypixelsLoaderPromise: Promise<any> | undefined;
+let promise: Promise<any> | undefined;
 
 /**
- * Contribution to emoji in markdown using [emoji-toolkit](https://github.com/joypixels/emoji-toolkit) library.
+ * Contribution to use emoji in markdown using [emoji-toolkit](https://github.com/joypixels/emoji-toolkit) library.
  */
 export class NgeMarkdownEmoji implements NgeMarkdownContribution {
     contribute(api: NgeMarkdown) {
         api.addHtmlModifier(async (element) => {
-            const joypixels = await this.requireJoypixels();
+            const joypixels = await this.joypixels(api);
             element.innerHTML = joypixels.shortnameToUnicode(element.innerHTML);
         });
     }
 
-    private requireJoypixels() {
-        if (joypixelsLoaderPromise) {
-            return joypixelsLoaderPromise;
+    private joypixels(api: NgeMarkdown) {
+        if (promise) {
+            return promise;
         }
 
         if ('joypixels' in window) {
-            return (joypixelsLoaderPromise = Promise.resolve(
+            return (promise = Promise.resolve(
                 (window as any).joypixels
             ));
         }
 
-        return (joypixelsLoaderPromise = new Promise<any>(async (resolve) => {
+        return (promise = new Promise<any>(async (resolve) => {
             await Promise.all([
-                this.addScript(
+                api.addScript(
                     'https://cdn.jsdelivr.net/npm/emoji-toolkit@6.0.1/lib/js/joypixels.min.js'
                 ),
             ]);
@@ -45,16 +45,6 @@ export class NgeMarkdownEmoji implements NgeMarkdownContribution {
         }));
     }
 
-    private addScript(url: string) {
-        const script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = url;
-        document.body.appendChild(script);
-        return new Promise<any>((resolve, reject) => {
-            script.onload = resolve;
-            script.onerror = reject;
-        });
-    }
 }
 
 /**

@@ -7,6 +7,8 @@ declare type TokenizerModifier = (
     tokenizer: marked.Tokenizer
 ) => marked.Tokenizer | Promise<marked.Tokenizer>;
 
+// TODO Use services like Renderer2 instead of direct access to global document object.
+
 /**
  * Nge markdown api to contribute.
  */
@@ -133,4 +135,52 @@ export class NgeMarkdown {
         return tokenizer;
     }
 
+    /**
+     * Add new stylesheet element to the document.
+     * @param url url to the stylesheet.
+     * @returns A promise that resolves once the element is loaded.
+     */
+    addStyle(url: string) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = url;
+        document.body.appendChild(link);
+        return new Promise<any>((resolve, reject) => {
+            link.onload = resolve;
+            link.onerror = reject;
+        });
+    }
+
+    /**
+     * Add new script element to the document.
+     * @param url url to the script.
+     * @returns A promise that resolves once the element is loaded.
+     */
+    addScript(url: string) {
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = url;
+        document.body.appendChild(script);
+        return new Promise<any>((resolve, reject) => {
+            script.onload = resolve;
+            script.onerror = reject;
+        });
+    }
+
+    /**
+     * Gets the list of declared css selectors (classes, ids...)
+     */
+    getDeclaredCssSelectors() {
+        const selectors: string[] = [];
+        for (const sheet of Array.from(document.styleSheets)) {
+            console.log(sheet);
+            const rules = (sheet as CSSStyleSheet).rules;
+            if (rules) {
+                for (const rule of Array.from(rules)) {
+                    selectors.push((rule as CSSStyleRule).selectorText);
+                }
+            }
+        }
+        return selectors;
+    }
 }

@@ -18,6 +18,7 @@ export class AppComponent implements OnInit {
         const cheatsheets = [
             'Admonitions',
             'Emoji',
+            'Icons',
             'Latex',
             'Admonitions',
             'TabbedSet',
