@@ -147,7 +147,7 @@ export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
             .nge-md-admonition {
                 margin: 1.5625em 0;
                 overflow: hidden;
-                font-size: 0.64rem;
+                font-size: 0.84rem;
                 page-break-inside: avoid;
                 border-radius: 0.1rem;
                 box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05), 0 0 0.05rem rgba(0, 0, 0, 0.1);

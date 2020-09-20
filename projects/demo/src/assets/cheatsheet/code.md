@@ -2,7 +2,7 @@ Inline `code` has `back-ticks around` it.
 
 `print("Hello world")`
 
-```javascript
+```javascript lines="1"
 var s = "JavaScript syntax highlighting";
 alert(s);
 ```
