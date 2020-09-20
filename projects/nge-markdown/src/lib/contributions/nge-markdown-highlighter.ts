@@ -16,6 +16,10 @@ const DATA_LINES = 'data-nge-markdown-lines';
 const DATA_LANGUAGE = 'data-nge-markdown-language';
 const DATA_HIGHLIGHTS = 'data-nge-markdown-highlights';
 
+export const NGE_MARKDOWN_HIGHLIGHTER_CONFIG = new InjectionToken<
+    NgeMarkdownHighlighterConfig
+>('NGE_MARKDOWN_HIGHLIGHTER_CONFIG');
+
 /**
  * Contribution to add an abstract syntax highlighter.
  */
@@ -156,7 +160,3 @@ export interface NgeMarkdownHighlighterConfig {
         options: NgeMarkdownHighlightOptions
     ): void | Promise<void>;
 }
-
-export const NGE_MARKDOWN_HIGHLIGHTER_CONFIG = new InjectionToken<
-    NgeMarkdownHighlighterConfig
->('NGE_MARKDOWN_HIGHLIGHTER_CONFIG');
