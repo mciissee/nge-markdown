@@ -5,6 +5,7 @@ import {
     Provider,
     Inject,
     Optional,
+    Type
 } from '@angular/core';
 import { NgeMarkdown } from '../nge-markdown';
 import {
@@ -16,9 +17,12 @@ const DATA_LINES = 'data-nge-markdown-lines';
 const DATA_LANGUAGE = 'data-nge-markdown-language';
 const DATA_HIGHLIGHTS = 'data-nge-markdown-highlights';
 
-export const NGE_MARKDOWN_HIGHLIGHTER_CONFIG = new InjectionToken<
-    NgeMarkdownHighlighterConfig
->('NGE_MARKDOWN_HIGHLIGHTER_CONFIG');
+/**
+ * Injection token to register a highlighter service.
+ */
+export const NGE_MARKDOWN_HIGHLIGHTER_SERVICE = new InjectionToken<
+    NgeMarkdownHighlighterService
+>('NGE_MARKDOWN_HIGHLIGHTER_SERVICE');
 
 /**
  * Contribution to add an abstract syntax highlighter.
@@ -28,8 +32,8 @@ export class NgeMarkdownHighlighter implements NgeMarkdownContribution {
     constructor(
         private readonly injector: Injector,
         @Optional()
-        @Inject(NGE_MARKDOWN_HIGHLIGHTER_CONFIG)
-        private readonly config: NgeMarkdownHighlighterConfig
+        @Inject(NGE_MARKDOWN_HIGHLIGHTER_SERVICE)
+        private readonly config: NgeMarkdownHighlighterService
     ) {}
 
     contribute(api: NgeMarkdown) {
@@ -102,6 +106,56 @@ export const NgeMarkdownHighlighterProvider: Provider = {
     useClass: NgeMarkdownHighlighter,
 };
 
+/**
+ * Provider to register `NgeMonacoColorizerService` as the syntax highlighter.
+ * @param type A reference to NgeMonacoColorizerService type.
+ */
+export const NgeMarkdownHighlighterMonacoProvider = (type: Type<any>) => {
+    return {
+        provide: NGE_MARKDOWN_HIGHLIGHTER_SERVICE,
+        useValue: {
+            highligtht: async (injector, options) => {
+                const colorizer = injector.get(type, null);
+                const code = options.element;
+                const pre = code.parentElement as HTMLElement;
+                await colorizer?.colorizeElement({
+                    element: code,
+                    language: options.language,
+                    code: code.innerHTML,
+                    lines: options.lines,
+                    highlights: options.highlights
+                });
+                if (!pre.classList.contains('monaco-editor')) {
+                    pre.classList.add('monaco-editor');
+                    pre.classList.add('monaco-editor-background');
+                }
+                pre.style.margin = '0.5em 0';
+                pre.style.overflow = 'auto';
+                pre.style.border = '1px solid #F2F2F2';
+            }
+        } as NgeMarkdownHighlighterService
+    };
+};
+
+/**
+ * Highlighter service representation.
+ */
+export interface NgeMarkdownHighlighterService {
+    /**
+     * Function called to hightlight an HTMLElement code.
+     * @param injector Injector reference to use Angular dependency injection.
+     * @param options Highlight options.
+     */
+    highligtht?(
+        injector: Injector,
+        options: NgeMarkdownHighlightOptions
+    ): void | Promise<void>;
+}
+
+
+/**
+ * Highlight options.
+ */
 export interface NgeMarkdownHighlightOptions {
     /** &lt;code&gt;&lt;/code&gt; element to colorize. */
     element: HTMLElement;
@@ -147,16 +201,4 @@ export interface NgeMarkdownHighlightOptions {
      * `"2 4-7 9"`
      */
     highlights?: string;
-}
-
-export interface NgeMarkdownHighlighterConfig {
-    /**
-     * Function called to hightlight an HTMLElement code.
-     * @param injector Injector reference to use Angular dependency injection.
-     * @param options Highlight options.
-     */
-    highligtht?(
-        injector: Injector,
-        options: NgeMarkdownHighlightOptions
-    ): void | Promise<void>;
 }
