@@ -60,10 +60,8 @@ export class NgeMarkdownComponent implements OnChanges, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        if (!this.file && !this.data) {
+        if (!this.file && !this.data) { // transclusion
             this.renderFromString(this.element.nativeElement.innerHTML, true);
-        } else {
-            this.element.nativeElement.innerHTML = '';
         }
     }
 
