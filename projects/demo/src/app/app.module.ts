@@ -15,6 +15,7 @@ import {
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgeMonacoModule, NgeMonacoColorizerService, NGE_THEMES } from 'nge-monaco';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     declarations: [AppComponent],
@@ -29,6 +30,7 @@ import { NgeMonacoModule, NgeMonacoColorizerService, NGE_THEMES } from 'nge-mona
             }
         }),
         AppRoutingModule,
+        BrowserAnimationsModule,
     ],
     providers: [
         NgeMarkdownKatexProvider,

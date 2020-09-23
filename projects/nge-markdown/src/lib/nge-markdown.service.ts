@@ -51,12 +51,19 @@ export class NgeMarkdownService {
             marked.lexer(markdown, markedOptions)
         );
 
-        options.target.nativeElement.innerHTML = marked.parser(
-            tokens,
-            markedOptions
-        );
 
-        await api.computeHtml(options.target.nativeElement);
+        // COMPUTE THE HTML IN NEW DOCUMENT OBJECT SO SCRIPTS WILL NOT BE EXECUTED AFTER
+        // DURING THE COMPUTATION
+        const virtualDom = new DOMParser().parseFromString(
+            marked.parser(
+                tokens,
+                markedOptions
+            ),
+            'text/html'
+        );
+        await api.computeHtml(virtualDom.body);
+
+        options.target.nativeElement.innerHTML = virtualDom.body.innerHTML;
 
         return tokens;
     }
