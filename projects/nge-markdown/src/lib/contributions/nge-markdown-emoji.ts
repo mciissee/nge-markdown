@@ -1,4 +1,4 @@
-import { Provider } from '@angular/core';
+import { Injectable, Provider } from '@angular/core';
 import { NgeMarkdown } from '../nge-markdown';
 import {
     NgeMarkdownContribution,
@@ -10,6 +10,7 @@ let promise: Promise<any> | undefined;
 /**
  * Contribution to use emoji in markdown using [emoji-toolkit](https://github.com/joypixels/emoji-toolkit) library.
  */
+@Injectable()
 export class NgeMarkdownEmoji implements NgeMarkdownContribution {
     contribute(api: NgeMarkdown) {
         api.addHtmlModifier(async (element) => {

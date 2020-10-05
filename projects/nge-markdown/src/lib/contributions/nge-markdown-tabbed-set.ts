@@ -1,4 +1,4 @@
-import { Provider } from '@angular/core';
+import { Injectable, Provider } from '@angular/core';
 import { NgeMarkdown } from '../nge-markdown';
 import { NgeMarkdownContribution, NGE_MARKDOWN_CONTRIBUTION } from './nge-markdown-contribution';
 
@@ -9,6 +9,7 @@ interface Tab {
     content: Element[];
 }
 
+@Injectable()
 export class NgeMarkdownTabbedSet implements NgeMarkdownContribution {
     contribute(api: NgeMarkdown) {
         this.createStyleSheet();

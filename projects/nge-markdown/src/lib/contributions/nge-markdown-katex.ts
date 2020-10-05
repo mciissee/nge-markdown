@@ -1,4 +1,4 @@
-import { Provider } from '@angular/core';
+import { Injectable, Provider } from '@angular/core';
 import { NgeMarkdown } from '../nge-markdown';
 import {
     NgeMarkdownContribution,
@@ -10,6 +10,7 @@ let promise: Promise<any> | undefined;
 /**
  * Contribution to render math expressions in markdown using [Katex](https://katex.org) library.
  */
+@Injectable()
 export class NgeMarkdownKatex implements NgeMarkdownContribution {
     contribute(api: NgeMarkdown) {
         api.addHtmlModifier(async (element) => {

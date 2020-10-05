@@ -1,12 +1,13 @@
 // tslint:disable: max-line-length
 
-import { Provider } from '@angular/core';
+import { Injectable, Provider } from '@angular/core';
 import { NgeMarkdown } from '../nge-markdown';
 import { NgeMarkdownContribution, NGE_MARKDOWN_CONTRIBUTION } from './nge-markdown-contribution';
 
 /**
  * Contribution to add collapsible styled block to markdown syntax.
  */
+@Injectable()
 export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
     contribute(api: NgeMarkdown) {
         this.createStyleSheet();
