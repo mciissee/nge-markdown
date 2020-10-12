@@ -26,19 +26,19 @@ const documentation: NgeDocSettings = {
             title: 'Getting Started',
             href: 'getting-started',
             renderer: `assets/docs/getting-started.md`,
-            actions: [editInGithubAction('assets/docs/getting-started.md')]
+            actions: [editInGithubAction('getting-started.md')]
         },
         {
             title: 'Installation',
             href: 'installation',
             renderer: `assets/docs/installation.md`,
-            actions: [editInGithubAction('assets/docs/installation.md')]
+            actions: [editInGithubAction('installation.md')]
         },
         {
             title: 'Usage',
             href: 'usage',
             renderer: `assets/docs/usage.md`,
-            actions: [editInGithubAction('assets/docs/usage.md')]
+            actions: [editInGithubAction('usage.md')]
         },
         () => {
             const link = {
@@ -63,18 +63,17 @@ const documentation: NgeDocSettings = {
                     // remove leading dash
                     .slice(1);
                 const base = 'https://github.com/mciissee/nge-markdown/tree/master/projects/nge-markdown/src/lib/contributions/';
-                const asset = 'assets/docs/contributions/' + snakecase + '.md';
                 return {
                     title: contribution,
                     href: snakecase,
-                    renderer: asset,
+                    renderer: 'assets/docs/contributions/' + snakecase + '.md',
                     actions: [
                         {
                             title: 'Source code',
                             icon: 'https://icongr.am/octicons/code.svg',
                             run: base + snakecase + '.ts',
                         },
-                        editInGithubAction(asset),
+                        editInGithubAction('contributions/' + snakecase + '.md'),
                     ]
                 };
             });
