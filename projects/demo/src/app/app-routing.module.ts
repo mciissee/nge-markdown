@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { NgeDocSettings } from 'nge-doc';
@@ -7,7 +6,7 @@ const documentation: NgeDocSettings = {
     meta: {
         name: 'nge-markdown',
         root: '/docs/',
-        copyright: '© 2020, nge-markdown',
+        logo: 'assets/images/nge.svg',
         repo: {
             name: 'nge-markdown',
             url: 'https://github.com/mciissee/nge-markdown',
@@ -18,7 +17,6 @@ const documentation: NgeDocSettings = {
         { title: 'Cheat sheet', href: 'cheat-sheet', renderer: `assets/cheatsheet/admonitions.md` },
         { title: 'Playground', href: 'playground', renderer: `assets/cheatsheet/admonitions.md` },
     ],
-    markdownRenderer: import('nge-markdown').then(m => m.NgeMarkdownComponent)
 };
 
 const routes: Routes = [

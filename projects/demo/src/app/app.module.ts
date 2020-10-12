@@ -16,6 +16,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgeMonacoModule, NgeMonacoColorizerService, NGE_THEMES } from 'nge-monaco';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NGE_DOC_RENDERERS } from 'nge-doc';
 
 @NgModule({
     declarations: [AppComponent],
@@ -40,7 +41,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         NgeMarkdownLinkAnchorProvider,
         NgeMarkdownAdmonitionsProvider,
         NgeMarkdownHighlighterProvider,
-        NgeMarkdownHighlighterMonacoProvider(NgeMonacoColorizerService)
+        NgeMarkdownHighlighterMonacoProvider(NgeMonacoColorizerService),
+        {
+            provide: NGE_DOC_RENDERERS,
+            useValue: {
+                markdown: {
+                    component: () => import('nge-markdown').then(m => m.NgeMarkdownComponent)
+                }
+            }
+        }
     ],
     bootstrap: [AppComponent],
 })

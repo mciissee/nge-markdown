@@ -54,8 +54,8 @@
     "@angular/router": "~9.1.12",
     "marked": "^1.1.1",
     "monaco-editor": "^0.20.0",
-    "nge-doc": "0.0.2",
-    "nge-monaco": "0.0.3",
+    "nge-doc": "0.0.9",
+    "nge-monaco": "0.0.5",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
