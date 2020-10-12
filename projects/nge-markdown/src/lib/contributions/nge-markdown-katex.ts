@@ -7,6 +7,20 @@ import {
 
 let promise: Promise<any> | undefined;
 
+/** Key of `NgeMarkdownKatex` arguments in `NgeMarkdownContributionArgs` map. */
+export const NgeMarkdownKatexArgsKey = 'katex';
+
+/** Custom arguments of NgeMarNgeMarkdownKatexkdownKatex contribution */
+export declare type NgeMarkdownKatexArgs = {
+    /** Katex library style url. */
+    katexStyleUrl?: string;
+    /** Katex library script url.  */
+    katexScriptUrl?: string;
+    /** Function called once katex is loaded */
+    onLoadKatex?: (katex: any) => void;
+};
+
+
 /**
  * Contribution to render math expressions in markdown using [Katex](https://katex.org) library.
  */
@@ -45,14 +59,23 @@ export class NgeMarkdownKatex implements NgeMarkdownContribution {
         }
 
         return (promise = new Promise<any>(async (resolve) => {
+            const args = api.contribArguments[NgeMarkdownKatexArgsKey] as NgeMarkdownKatexArgs;
             await Promise.all([
-                api.addScript('https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js'),
-                api.addStyle('https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css'),
+                api.addScript(
+                    args?.katexScriptUrl || 'https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js'
+                ),
+                api.addStyle(
+                    args?.katexStyleUrl || 'https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css'
+                ),
             ]);
             let interval: any;
             interval = setInterval(() => {
-                if ((window as any).katex) {
-                    resolve((window as any).katex);
+                const katex = (window as any).katex;
+                if (katex) {
+                    if (args?.onLoadKatex) {
+                        args.onLoadKatex(katex);
+                    }
+                    resolve(katex);
                     clearInterval(interval);
                 }
             }, 30);

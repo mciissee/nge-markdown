@@ -7,10 +7,16 @@ import {
 
 let promise: Promise<any> | undefined;
 
-/** Custom arguments of NgeMarkdownEmoji contribution */
+/** Key of `NgeMarkdownEmoji` arguments in `NgeMarkdownContributionArgs` map. */
+export const NgeMarkdownEmojiArgsKey = 'emoji';
+
+/** Custom arguments of `NgeMarkdownEmoji` contribution */
 export declare type NgeMarkdownEmojiArgs = {
-    /**  */
+    /** joypixels script url. */
     joypixelsUrl: string;
+
+    /** Function called once joypixels is loaded */
+    onLoadJoypixels?: (joypixels: any) => void;
 };
 
 /**
@@ -37,7 +43,7 @@ export class NgeMarkdownEmoji implements NgeMarkdownContribution {
         }
 
         return (promise = new Promise<any>(async (resolve) => {
-            const args = api.contribArguments?.emoji as NgeMarkdownEmojiArgs;
+            const args = api.contribArguments[NgeMarkdownEmojiArgsKey] as NgeMarkdownEmojiArgs;
             await Promise.all([
                 api.addScript(
                     args?.joypixelsUrl || 'https://cdn.jsdelivr.net/npm/emoji-toolkit@6.0.1/lib/js/joypixels.min.js'
@@ -45,8 +51,12 @@ export class NgeMarkdownEmoji implements NgeMarkdownContribution {
             ]);
             let interval: any;
             interval = setInterval(() => {
-                if ((window as any).joypixels) {
-                    resolve((window as any).joypixels);
+                const joypixels = (window as any).joypixels;
+                if (joypixels) {
+                    if (args?.onLoadJoypixels) {
+                        args.onLoadJoypixels(joypixels);
+                    }
+                    resolve(joypixels);
                     clearInterval(interval);
                 }
             }, 30);
