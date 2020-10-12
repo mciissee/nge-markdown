@@ -13,9 +13,9 @@ import {
     NGE_MARKDOWN_CONTRIBUTION,
 } from './nge-markdown-contribution';
 
-const DATA_LINES = 'data-nge-markdown-lines';
-const DATA_LANGUAGE = 'data-nge-markdown-language';
-const DATA_HIGHLIGHTS = 'data-nge-markdown-highlights';
+const DATA_LINES = 'data-nge-md-hl-lines';
+const DATA_LANGUAGE = 'data-nge-md-hl-language';
+const DATA_HIGHLIGHTS = 'data-nge-md-hl-highlights';
 
 /**
  * Injection token to register a highlighter service.

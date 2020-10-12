@@ -8,13 +8,12 @@ import {
 let promise: Promise<any> | undefined;
 
 /** Key of `NgeMarkdownEmoji` arguments in `NgeMarkdownContributionArgs` map. */
-export const NgeMarkdownEmojiArgsKey = 'emoji';
+export const NgeMarkdownEmojiArgsKey = 'nge-markdown-emoji';
 
 /** Custom arguments of `NgeMarkdownEmoji` contribution */
 export declare type NgeMarkdownEmojiArgs = {
     /** joypixels script url. */
     joypixelsUrl: string;
-
     /** Function called once joypixels is loaded */
     onLoadJoypixels?: (joypixels: any) => void;
 };
@@ -59,14 +58,14 @@ export class NgeMarkdownEmoji implements NgeMarkdownContribution {
                     resolve(joypixels);
                     clearInterval(interval);
                 }
-            }, 30);
+            }, 300);
         }));
     }
 
 }
 
 /**
- * Provider to emoji in markdown using [emoji-toolkit](https://github.com/joypixels/emoji-toolkit) library.
+ * Provider to use emoji in markdown using [emoji-toolkit](https://github.com/joypixels/emoji-toolkit) library.
  */
 export const NgeMarkdownEmojiProvider: Provider = {
     provide: NGE_MARKDOWN_CONTRIBUTION,

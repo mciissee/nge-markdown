@@ -8,7 +8,7 @@ import {
 let promise: Promise<any> | undefined;
 
 /** Key of `NgeMarkdownKatex` arguments in `NgeMarkdownContributionArgs` map. */
-export const NgeMarkdownKatexArgsKey = 'katex';
+export const NgeMarkdownKatexArgsKey = 'nge-markdown-katex';
 
 /** Custom arguments of NgeMarNgeMarkdownKatexkdownKatex contribution */
 export declare type NgeMarkdownKatexArgs = {
@@ -19,7 +19,6 @@ export declare type NgeMarkdownKatexArgs = {
     /** Function called once katex is loaded */
     onLoadKatex?: (katex: any) => void;
 };
-
 
 /**
  * Contribution to render math expressions in markdown using [Katex](https://katex.org) library.
