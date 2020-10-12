@@ -33,25 +33,3 @@ Install from npm
 ```bash
 npm i nge-markdown marked
 ```
-
-=== Tab1
-
-```python
-from random import randint
-print("Hello "  + randint(0, 10))
-```
-
-=== Tab2
-
-sdkmls
-
-===
-
-
-::: note title
-
-sdjqksdqs
-
-dqskdqs
-
-:::

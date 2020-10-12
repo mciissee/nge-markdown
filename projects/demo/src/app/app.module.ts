@@ -1,6 +1,12 @@
+// Angular
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+// Libs
+import { NGE_DOC_RENDERERS } from 'nge-doc';
+import { NgeMonacoModule, NgeMonacoColorizerService, NGE_THEMES } from 'nge-monaco';
 import {
     NgeMarkdownModule,
     NgeMarkdownTabbedSetProvider,
@@ -10,13 +16,12 @@ import {
     NgeMarkdownEmojiProvider,
     NgeMarkdownIconsProvider,
     NgeMarkdownHighlighterProvider,
-    NgeMarkdownHighlighterMonacoProvider
+    NgeMarkdownHighlighterMonacoProvider,
 } from 'nge-markdown';
+
+// Module
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NgeMonacoModule, NgeMonacoColorizerService, NGE_THEMES } from 'nge-monaco';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NGE_DOC_RENDERERS } from 'nge-doc';
 
 @NgModule({
     declarations: [AppComponent],
@@ -49,7 +54,7 @@ import { NGE_DOC_RENDERERS } from 'nge-doc';
                     component: () => import('nge-markdown').then(m => m.NgeMarkdownComponent)
                 }
             }
-        }
+        },
     ],
     bootstrap: [AppComponent],
 })
