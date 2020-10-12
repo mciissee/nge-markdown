@@ -1,0 +1,57 @@
+# Installation
+
+## Install a development server
+
+Open a terminal and clone this repository
+
+```bash
+git clone https://github.com/mciissee/nge-markown
+```
+
+Go to nge-doc folder
+
+```bash
+cd nge-markdown
+```
+
+Install the dependencies from package.json
+
+```bash
+npm install
+```
+
+Start the development server and open [http://localhost:4200/](http://localhost:4200/)
+
+```bash
+npm start
+```
+
+## Install in your Angular applications
+
+Install from npm
+
+```bash
+npm i nge-markdown marked
+```
+
+=== Tab1
+
+```python
+from random import randint
+print("Hello "  + randint(0, 10))
+```
+
+=== Tab2
+
+sdkmls
+
+===
+
+
+::: note title
+
+sdjqksdqs
+
+dqskdqs
+
+:::

@@ -13,9 +13,8 @@ const documentation: NgeDocSettings = {
         },
     },
     pages: [
-        { title: 'Getting Started', href: 'getting-started', renderer: `assets/cheatsheet/admonitions.md` },
-        { title: 'Cheat sheet', href: 'cheat-sheet', renderer: `assets/cheatsheet/admonitions.md` },
-        { title: 'Playground', href: 'playground', renderer: `assets/cheatsheet/admonitions.md` },
+        { title: 'Getting Started', href: 'getting-started', renderer: `assets/docs/getting-started.md` },
+        { title: 'Installation', href: 'cheat-sheet', renderer: `assets/docs/installation.md` },
     ],
 };
 
