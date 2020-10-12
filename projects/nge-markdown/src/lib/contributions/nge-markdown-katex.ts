@@ -30,21 +30,24 @@ export class NgeMarkdownKatex implements NgeMarkdownContribution {
             const katex = await this.katex(api);
             // pattern to search multiline latex between $$...$$ or inline latex between $...$
             const pattern = /(\$\$\n((.|\s|\n)+?)\n\$\$)|(\$([^\s][^$\n]+?[^\s])\$)/gm;
-            element.innerHTML = element
-                .innerHTML
-                .replace(pattern, (match) => {
-                    if (match.startsWith('$$')) {
+            const paragraphs = element.querySelectorAll('p, div, span');
+            paragraphs.forEach(p => {
+                p.innerHTML = p
+                    .innerHTML
+                    .replace(pattern, (match) => {
+                        if (match.startsWith('$$')) {
+                            return katex.renderToString(
+                                // remove $$ from the start and end of the match
+                                match.substring(2, match.length - 2)
+                            );
+                        }
                         return katex.renderToString(
-                            // remove $$ from the start and end of the match
-                            match.substring(2, match.length - 2)
+                            // remove $ from the start and the end of the match
+                            match.substring(1, match.length - 1)
                         );
                     }
-                    return katex.renderToString(
-                        // remove $ from the start and the end of the match
-                        match.substring(1, match.length - 1)
-                    );
-                }
-            );
+                );
+            });
         });
     }
 
