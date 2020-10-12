@@ -6,7 +6,7 @@ Admonitions, also known as call-outs, are an excellent choice for including side
 
 ## Configuration
 
-```typescript highlights="6-9 18 22"
+```typescript highlights="6-9 18 21"
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
