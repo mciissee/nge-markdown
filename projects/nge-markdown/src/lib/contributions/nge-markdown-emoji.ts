@@ -7,6 +7,12 @@ import {
 
 let promise: Promise<any> | undefined;
 
+/** Custom arguments of NgeMarkdownEmoji contribution */
+export declare type NgeMarkdownEmojiArgs = {
+    /**  */
+    joypixelsUrl: string;
+};
+
 /**
  * Contribution to use emoji in markdown using [emoji-toolkit](https://github.com/joypixels/emoji-toolkit) library.
  */
@@ -31,9 +37,10 @@ export class NgeMarkdownEmoji implements NgeMarkdownContribution {
         }
 
         return (promise = new Promise<any>(async (resolve) => {
+            const args = api.contribArguments?.emoji as NgeMarkdownEmojiArgs;
             await Promise.all([
                 api.addScript(
-                    'https://cdn.jsdelivr.net/npm/emoji-toolkit@6.0.1/lib/js/joypixels.min.js'
+                    args?.joypixelsUrl || 'https://cdn.jsdelivr.net/npm/emoji-toolkit@6.0.1/lib/js/joypixels.min.js'
                 ),
             ]);
             let interval: any;
