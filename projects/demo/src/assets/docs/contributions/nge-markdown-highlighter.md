@@ -1,3 +1,0 @@
-# NgeMarkdownHighlighter
-
-TODO

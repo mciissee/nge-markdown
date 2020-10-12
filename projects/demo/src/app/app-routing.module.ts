@@ -48,23 +48,23 @@ const documentation: NgeDocSettings = {
                 actions: [editInGithubAction('assets/docs/contributions/contributions.md')]
             } as NgeDocLink;
             const contributions = [
-                'NgeMarkdownAdmonitions',
-                'NgeMarkdownEmoji',
-                'NgeMarkdownHighlighter',
-                'NgeMarkdownIcons',
-                'NgeMarkdownKatex',
-                'NgeMarkdownLinkAnchor',
-                'NgeMarkdownTabbedSet'
+                'Admonitions',
+                'Emoji',
+                'Highlighter',
+                'Icons',
+                'Katex',
+                'LinkAnchor',
+                'TabbedSet'
             ];
-            link.children = contributions.map(contribution => {
-                const snakecase = contribution
+            link.children = contributions.map(name => {
+                const snakecase = name
                     // transform to snake case
                     .replace(/[A-Z]/gm, (match) => '-' + match.toLowerCase())
                     // remove leading dash
                     .slice(1);
                 const base = 'https://github.com/mciissee/nge-markdown/tree/master/projects/nge-markdown/src/lib/contributions/';
                 return {
-                    title: contribution,
+                    title: name,
                     href: snakecase,
                     renderer: 'assets/docs/contributions/' + snakecase + '.md',
                     actions: [
