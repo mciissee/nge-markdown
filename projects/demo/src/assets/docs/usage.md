@@ -129,3 +129,97 @@ You can also use the `NgeMarkdownService` service to compile the markdown yourse
 `<nge-markdown></nge-markdown>` component.
 
 :::
+
+## Options
+
+Optionally, marked parser can be configured by passing a custom [MarkedOptions](https://marked.js.org/#/USING_ADVANCED.md#options) to the `NGE_MARKDOWN_CONFIG` configuration object using the `providers` array of your application main module.
+
+```typescript highlights="4 17-26"
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { NgeMarkdownModule, NGE_MARKDOWN_CONFIG, NgeMarkdownConfig } from 'nge-markdown';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+  ],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    NgeMarkdownModule,
+  ],
+  providers: [
+    {
+      provide: NGE_MARKDOWN_CONFIG,
+      // https://marked.js.org/#/USING_ADVANCED.md#options
+      useValue: {
+        breaks: false,
+        pedantic: false,
+        smartLists: true,
+        smartypants: false,
+      } as NgeMarkdownConfig
+    }
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
+
+:::+ note Note
+
+The properties `highlight` and `langPrefix` are from the MarkedOptions object because they are used by the nge-markdown lib itself
+so you cannot override theses properties.
+
+:::
+
+You can also use a factory provider in the case where you want to compute
+marked `renderer` and `tokenizer`.
+
+```typescript highlights="4 7-25 37-40"
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { NgeMarkdownModule, NGE_MARKDOWN_CONFIG, NgeMarkdownConfig } from 'nge-markdown';
+import { AppComponent } from './app.component';
+
+export function markedOptionsFactory(): MarkedOptions {
+  const renderer = new MarkedRenderer();
+  const tokenizer = new MarkedTokenizer();
+
+  renderer.blockquote = (text: string) => {
+    return '<blockquote class="blockquote"><p>' + text + '</p></blockquote>';
+  };
+
+  // transform the tokenizer here
+
+  return {
+    renderer,
+    tokenizer,
+    breaks: false,
+    pedantic: false,
+    smartLists: true,
+    smartypants: false,
+  };
+}
+
+@NgModule({
+  declarations: [
+    AppComponent,
+  ],
+  imports: [
+    BrowserModule,
+    HttpClientModule,
+    NgeMarkdownModule,
+  ],
+  providers: [
+    {
+      provide: NGE_MARKDOWN_CONFIG,
+      useFactory: markedOptionsFactory
+    }
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+```
