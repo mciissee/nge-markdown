@@ -4,20 +4,56 @@ import { Injectable, Provider } from '@angular/core';
 import { NgeMarkdownTransformer } from '../nge-markdown-transformer';
 import { NgeMarkdownContribution, NGE_MARKDOWN_CONTRIBUTION } from './nge-markdown-contribution';
 
+const OPEN = /^:::(\+?)\s+(\w+)(\s+.+)?/;
+const CLOSE = /^:::\s*$/;
+
 /**
  * Contribution to add collapsible styled block to markdown syntax.
  */
 @Injectable()
 export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
     contribute(api: NgeMarkdownTransformer) {
-        this.createStyleSheet();
+        this.insertStylesheet();
+        this.autoBreakLines(api);
+        this.createAdmonitions(api);
+    }
+
+    private autoBreakLines(api: NgeMarkdownTransformer) {
+        api.addMarkdownTransformer(markdown => {
+            const lines = markdown.split('\n');
+            const length = lines.length;
+            let insideCodeBlock = false;
+            for (let i = 0; i < length; i++) {
+                const curr = lines[i];
+                if (curr.startsWith('```')) {
+                    insideCodeBlock = !insideCodeBlock;
+                }
+                if (insideCodeBlock) {
+                    continue;
+                }
+
+                const prev = i > 0 ? lines[i - 1] : undefined;
+                const next = i < length - 1 ? lines[i + 1] : undefined;
+                if (curr.match(OPEN)) {
+                    if (next?.trim()) {
+                        lines[i] = curr + '\n';
+                    }
+                } else if (curr.match(CLOSE)) {
+                    if (prev?.trim()) {
+                        lines[i] = '\n' + curr;
+                    }
+                }
+            }
+            return lines.join('\n');
+        });
+    }
+
+    private createAdmonitions(api: NgeMarkdownTransformer) {
         api.addHtmlTransformer((element) => {
             const paragraphs = element.querySelectorAll('p');
-            const openPattern = /^:::(\+?)\s+(\w+)(\s+.+)?/;
-            const closePattern = /^:::\s*$/;
             paragraphs.forEach((p) => {
                 const text = p.innerHTML;
-                const match = text.match(openPattern);
+                const match = text.match(OPEN);
                 if (match) {
                     const opener = match[1];
                     const type = match[2];
@@ -40,9 +76,9 @@ export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
                     let opened = 1;
                     while (node) {
                         const innerHTML = node.innerHTML.trim();
-                        if (innerHTML.match(openPattern)) {
+                        if (innerHTML.match(OPEN)) {
                             opened++;
-                        } else if (innerHTML.match(closePattern)) {
+                        } else if (innerHTML.match(CLOSE)) {
                             opened--;
                             if (opened === 0) {
                                 node.remove();
@@ -65,7 +101,7 @@ export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
         });
     }
 
-    private createStyleSheet() {
+    private insertStylesheet() {
         if (document.body.hasAttribute('nge-markdown-admonitions')) {
             return;
         }
@@ -229,7 +265,6 @@ export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
         style.innerHTML = stylesheet.join('\n');
         document.body.appendChild(style);
     }
-
 }
 
 /**
