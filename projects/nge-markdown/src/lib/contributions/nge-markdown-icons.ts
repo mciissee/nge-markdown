@@ -11,12 +11,20 @@ import {
 @Injectable()
 export class NgeMarkdownIcons implements NgeMarkdownContribution {
     contribute(api: NgeMarkdownTransformer) {
-        // octicons = octicons ?? api.addStyle('https://unpkg.com/@icon/octicons/octicons.css');
-        const pattern = /@(\w+)\s+([\w-]+)((\s+(?:color|size)=[^\s]+)*?)?@/gm;
-        api.addHtmlTransformer(async element => {
-            element.innerHTML = element
-                .innerHTML
-                .replace(pattern, (_: string, type: string,  name: string, params?: string) => {
+        api.addMarkdownTransformer(async markdown => {
+            const pattern = /@(\w+)\s+([\w-]+)((\s+(?:color|size)=[^\s]+)*?)?@/gm;
+            const lines = markdown.split('\n');
+            const length = lines.length;
+            let insideCodeBlock = false;
+            for (let i = 0; i < length; i++) {
+                const curr = lines[i];
+                if (curr.startsWith('```')) {
+                    insideCodeBlock = !insideCodeBlock;
+                }
+                if (insideCodeBlock) {
+                    continue;
+                }
+                lines[i] = lines[i].replace(pattern, (_: string, type: string,  name: string, params?: string) => {
                     params = (params ?? '')
                         .trim()
                         .split(' ')
@@ -25,6 +33,8 @@ export class NgeMarkdownIcons implements NgeMarkdownContribution {
                     params = params ? '?' + params : '';
                     return `<img src="https://icongr.am/${type.trim()}/${name.trim()}.svg${params}"/>`;
                 });
+            }
+            return lines.join('\n');
         });
     }
 }
