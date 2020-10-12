@@ -6,7 +6,7 @@ import { InjectionToken } from '@angular/core';
  */
 export declare type NgeMarkdownConfig = Omit<
     marked.MarkedOptions,
-    'highlight' | 'sanitizer' | 'langPrefix'
+    'highlight' | 'langPrefix'
 >;
 
 export const NGE_MARKDOWN_CONFIG = new InjectionToken<NgeMarkdownConfig>(
