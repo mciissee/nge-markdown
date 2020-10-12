@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     Component,
+    ContentChild,
     ElementRef,
     EventEmitter,
     HostBinding,
@@ -10,18 +12,20 @@ import {
     OnChanges,
     Optional,
     Output,
+    ViewChild,
 } from '@angular/core';
 import {
     NgeMarkdownContribution,
     NGE_MARKDOWN_CONTRIBUTION,
 } from './contributions/nge-markdown-contribution';
 import { NgeMarkdownService } from './nge-markdown.service';
-import * as marked from 'marked';
+import { MarkedTokensList } from './marked-types';
 
 @Component({
     selector: 'nge-markdown, [nge-markdown]',
-    template: `<ng-content></ng-content>`,
-    styleUrls: ['nge-markdown.component.scss']
+    templateUrl: 'nge-markdown.component.html',
+    styleUrls: ['nge-markdown.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NgeMarkdownComponent implements OnChanges, AfterViewInit {
     /** Link to a markdown file to render. */
@@ -32,18 +36,22 @@ export class NgeMarkdownComponent implements OnChanges, AfterViewInit {
 
     /** Theme to apply to the markdown content. */
     @Input()
-    @HostBinding('class')
     theme: 'github' | 'none' = 'github';
+
+    @HostBinding('class')
+    get klass() {
+        return 'nge-markdown-theme--' + this.theme;
+    }
 
     /**
      * An event that emit after each rendering pass
      * with the list of tokens parsed from the input markdown.
      */
-    @Output() render = new EventEmitter<marked.TokensList>();
+    @Output() render = new EventEmitter<MarkedTokensList>();
 
     constructor(
-        private readonly element: ElementRef<HTMLElement>,
-        private readonly markdownService: NgeMarkdownService,
+        private readonly el: ElementRef<HTMLElement>,
+        private readonly api: NgeMarkdownService,
         @Optional()
         private readonly http: HttpClient,
         @Optional()
@@ -60,8 +68,11 @@ export class NgeMarkdownComponent implements OnChanges, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        if (!this.file && !this.data) { // transclusion
-            this.renderFromString(this.element.nativeElement.innerHTML, true);
+        if (!this.file && !this.data) {
+            this.renderFromString(
+                this.el.nativeElement.innerHTML,
+                true
+            );
         }
     }
 
@@ -71,15 +82,14 @@ export class NgeMarkdownComponent implements OnChanges, AfterViewInit {
                 '[nge-markdown] When using the `file` attribute you *have to* pass the `HttpClient` as a parameter of the `forRoot` method. See README for more information'
             );
         }
-
         this.http.get(file, { responseType: 'text' }).subscribe({
             next: (markdown) => this.renderFromString(markdown),
         });
     }
 
     private async renderFromString(markdown: string, isHtmlString = false) {
-        const tokens = await this.markdownService.compile({
-            target: this.element.nativeElement,
+        const tokens = await this.api.compile({
+            target: this.el.nativeElement,
             markdown,
             isHtmlString,
             contributions: this.contributions,

@@ -1,9 +1,11 @@
+// https://github.com/sindresorhus/github-markdown-css/blob/gh-pages/github-markdown.css
+
 @mixin github-markdown {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   line-height: 1.5;
   color: currentColor;
-  font-size: 16px;
+  font-size: 1.1em;
   line-height: 1.5;
   word-wrap: break-word;
 

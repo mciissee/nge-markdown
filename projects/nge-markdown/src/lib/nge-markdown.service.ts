@@ -41,9 +41,10 @@ export class NgeMarkdownService {
             markdown = this.decodeHtml(markdown);
         }
 
-        const api = this.createApi(options);
+        const api = this.contribute(options);
         const renderer = await this.createRenderer(api);
         const tokenizer = await this.createTokenizer(api);
+
         const markedOptions: marked.MarkedOptions = {
             gfm: true,
             ...this.config,
@@ -56,8 +57,7 @@ export class NgeMarkdownService {
             marked.lexer(markdown, markedOptions)
         );
 
-
-        // COMPUTE THE HTML IN NEW DOCUMENT OBJECT SO SCRIPTS WILL NOT BE EXECUTED AFTER
+        // COMPUTE THE HTML IN NEW DOCUMENT OBJECT SO SCRIPTS WILL NOT BE EXECUTED
         // DURING THE COMPUTATION
         const virtualDom = new DOMParser().parseFromString(
             marked.parser(
@@ -86,16 +86,16 @@ export class NgeMarkdownService {
         );
     }
 
-    private createApi(options: NgeMarkdownCompileOptions) {
+    private contribute(options: NgeMarkdownCompileOptions) {
         const contributions = [...(options.contributions || [])];
-        const modifier = new NgeMarkdown(
+        const markdown = new NgeMarkdown(
             this.config,
             this.contribArgs
         );
         contributions.forEach((contrib) => {
-            contrib.contribute(modifier);
+            contrib.contribute(markdown);
         });
-        return modifier;
+        return markdown;
     }
 
     private decodeHtml(html: string): string {

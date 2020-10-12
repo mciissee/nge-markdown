@@ -1,6 +1,4 @@
-// https://github.com/sindresorhus/github-markdown-css/blob/gh-pages/github-markdown.css
-
-:host.github::ng-deep {
+:host.nge-markdown-theme--github::ng-deep {
   @import './themes/github.scss';
   @include github-markdown();
 }
