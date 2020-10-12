@@ -79,7 +79,7 @@ export class NgeMarkdownComponent implements OnChanges, AfterViewInit {
 
     private async renderFromString(markdown: string, isHtmlString = false) {
         const tokens = await this.markdownService.compile({
-            target: this.element,
+            target: this.element.nativeElement,
             markdown,
             isHtmlString,
             contributions: this.contributions,

@@ -1,11 +1,10 @@
 import {
-    ElementRef,
     Inject,
     Injectable,
     Optional
 } from '@angular/core';
 import * as marked from 'marked';
-import { NgeMarkdownContribution } from './contributions/nge-markdown-contribution';
+import { NgeMarkdownContribution, NgeMarkdownContributionArgs, NGE_MARKDOWN_CONTRIBUTION_ARGS } from './contributions/nge-markdown-contribution';
 import { MarkedRenderer, MarkedTokenizer } from './marked-types';
 import { NgeMarkdownConfig, NGE_MARKDOWN_CONFIG } from './nge-markdown-config';
 import { NgeMarkdown } from './nge-markdown';
@@ -22,7 +21,13 @@ export class NgeMarkdownService {
         @Optional()
         @Inject(NGE_MARKDOWN_CONFIG)
         private readonly config: NgeMarkdownConfig,
-    ) {}
+        @Optional()
+        @Inject(NGE_MARKDOWN_CONTRIBUTION_ARGS)
+        private readonly contribArgs: NgeMarkdownContributionArgs,
+    ) {
+        this.config = config || {};
+        this.contribArgs = contribArgs || {};
+    }
 
     /**
      * Compiles a markdown string to an html string.
@@ -41,7 +46,7 @@ export class NgeMarkdownService {
         const tokenizer = await this.createTokenizer(api);
         const markedOptions: marked.MarkedOptions = {
             gfm: true,
-            ...(this.config || {}),
+            ...this.config,
             langPrefix: 'language-',
             renderer,
             tokenizer,
@@ -63,7 +68,7 @@ export class NgeMarkdownService {
         );
         await api.computeHtml(virtualDom.body);
 
-        options.target.nativeElement.innerHTML = virtualDom.body.innerHTML;
+        options.target.innerHTML = virtualDom.body.innerHTML;
 
         return tokens;
     }
@@ -83,7 +88,10 @@ export class NgeMarkdownService {
 
     private createApi(options: NgeMarkdownCompileOptions) {
         const contributions = [...(options.contributions || [])];
-        const modifier = new NgeMarkdown();
+        const modifier = new NgeMarkdown(
+            this.config,
+            this.contribArgs
+        );
         contributions.forEach((contrib) => {
             contrib.contribute(modifier);
         });
@@ -128,7 +136,7 @@ interface NgeMarkdownCompileOptions {
     /** Markdown string to compile. */
     markdown: string;
     /** HTMLElement on which to render the compiled markdown.  */
-    target: ElementRef<HTMLElement>;
+    target: HTMLElement;
     /** Is the markdown contains html code? */
     isHtmlString?: boolean;
     /** List of contribution to use during the compilation. */
