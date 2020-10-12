@@ -24,9 +24,22 @@ export declare type NgeMarkdownEmojiArgs = {
 @Injectable()
 export class NgeMarkdownEmoji implements NgeMarkdownContribution {
     contribute(api: NgeMarkdownTransformer) {
-        api.addHtmlTransformer(async (element) => {
+        api.addMarkdownTransformer(async markdown => {
             const joypixels = await this.joypixels(api);
-            element.innerHTML = joypixels.shortnameToUnicode(element.innerHTML);
+            const lines = markdown.split('\n');
+            const length = lines.length;
+            let insideCodeBlock = false;
+            for (let i = 0; i < length; i++) {
+                const curr = lines[i];
+                if (curr.startsWith('```')) {
+                    insideCodeBlock = !insideCodeBlock;
+                }
+                if (insideCodeBlock) {
+                    continue;
+                }
+                lines[i] = joypixels.shortnameToUnicode(lines[i]);
+            }
+            return lines.join('\n');
         });
     }
 
