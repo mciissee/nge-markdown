@@ -1,5 +1,5 @@
 import { InjectionToken } from '@angular/core';
-import { NgeMarkdown } from '../nge-markdown';
+import { NgeMarkdownTransformer } from '../nge-markdown-transformer';
 
 /**
  * Implements this interface to contribute to nge-markdown.
@@ -9,7 +9,7 @@ export interface NgeMarkdownContribution {
      * Contributes to nge-markdown api.
      * @param api nge-markdown api.
      */
-    contribute(api: NgeMarkdown): void;
+    contribute(api: NgeMarkdownTransformer): void;
 }
 
 export declare type NgeMarkdownContributionArgs = Record<string, any>;

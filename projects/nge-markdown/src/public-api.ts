@@ -11,7 +11,7 @@ export * from './lib/contributions/nge-markdown-katex';
 export * from './lib/contributions/nge-markdown-link-anchor';
 export * from './lib/contributions/nge-markdown-tabbed-set';
 export * from './lib/marked-types';
-export * from './lib/nge-markdown';
+export * from './lib/nge-markdown-transformer';
 export * from './lib/nge-markdown-config';
 export * from './lib/nge-markdown.component';
 export * from './lib/nge-markdown.module';

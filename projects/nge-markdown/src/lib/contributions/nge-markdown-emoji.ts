@@ -1,5 +1,5 @@
 import { Injectable, Provider } from '@angular/core';
-import { NgeMarkdown } from '../nge-markdown';
+import { NgeMarkdownTransformer } from '../nge-markdown-transformer';
 import {
     NgeMarkdownContribution,
     NGE_MARKDOWN_CONTRIBUTION
@@ -23,14 +23,14 @@ export declare type NgeMarkdownEmojiArgs = {
  */
 @Injectable()
 export class NgeMarkdownEmoji implements NgeMarkdownContribution {
-    contribute(api: NgeMarkdown) {
-        api.addHtmlModifier(async (element) => {
+    contribute(api: NgeMarkdownTransformer) {
+        api.addHtmlTransformer(async (element) => {
             const joypixels = await this.joypixels(api);
             element.innerHTML = joypixels.shortnameToUnicode(element.innerHTML);
         });
     }
 
-    private joypixels(api: NgeMarkdown) {
+    private joypixels(api: NgeMarkdownTransformer) {
         if (promise) {
             return promise;
         }

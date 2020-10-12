@@ -1,5 +1,5 @@
 import { Injectable, Provider } from '@angular/core';
-import { NgeMarkdown } from '../nge-markdown';
+import { NgeMarkdownTransformer } from '../nge-markdown-transformer';
 import {
     NgeMarkdownContribution,
     NGE_MARKDOWN_CONTRIBUTION
@@ -10,10 +10,10 @@ import {
  */
 @Injectable()
 export class NgeMarkdownIcons implements NgeMarkdownContribution {
-    contribute(api: NgeMarkdown) {
+    contribute(api: NgeMarkdownTransformer) {
         // octicons = octicons ?? api.addStyle('https://unpkg.com/@icon/octicons/octicons.css');
         const pattern = /@(\w+)\s+([\w-]+)((\s+(?:color|size)=[^\s]+)*?)?@/gm;
-        api.addHtmlModifier(async element => {
+        api.addHtmlTransformer(async element => {
             element.innerHTML = element
                 .innerHTML
                 .replace(pattern, (_: string, type: string,  name: string, params?: string) => {

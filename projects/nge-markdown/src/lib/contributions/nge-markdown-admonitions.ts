@@ -1,7 +1,7 @@
 // tslint:disable: max-line-length
 
 import { Injectable, Provider } from '@angular/core';
-import { NgeMarkdown } from '../nge-markdown';
+import { NgeMarkdownTransformer } from '../nge-markdown-transformer';
 import { NgeMarkdownContribution, NGE_MARKDOWN_CONTRIBUTION } from './nge-markdown-contribution';
 
 /**
@@ -9,9 +9,9 @@ import { NgeMarkdownContribution, NGE_MARKDOWN_CONTRIBUTION } from './nge-markdo
  */
 @Injectable()
 export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
-    contribute(api: NgeMarkdown) {
+    contribute(api: NgeMarkdownTransformer) {
         this.createStyleSheet();
-        api.addHtmlModifier((element) => {
+        api.addHtmlTransformer((element) => {
             const paragraphs = element.querySelectorAll('p');
             const openPattern = /^:::(\+?)\s+(\w+)(\s+.+)?/;
             const closePattern = /^:::\s*$/;

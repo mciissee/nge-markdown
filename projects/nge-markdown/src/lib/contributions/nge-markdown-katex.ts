@@ -1,5 +1,5 @@
 import { Injectable, Provider } from '@angular/core';
-import { NgeMarkdown } from '../nge-markdown';
+import { NgeMarkdownTransformer } from '../nge-markdown-transformer';
 import {
     NgeMarkdownContribution,
     NGE_MARKDOWN_CONTRIBUTION
@@ -25,8 +25,8 @@ export declare type NgeMarkdownKatexArgs = {
  */
 @Injectable()
 export class NgeMarkdownKatex implements NgeMarkdownContribution {
-    contribute(api: NgeMarkdown) {
-        api.addHtmlModifier(async (element) => {
+    contribute(api: NgeMarkdownTransformer) {
+        api.addHtmlTransformer(async (element) => {
             const katex = await this.katex(api);
             // pattern to search multiline latex between $$...$$ or inline latex between $...$
             const pattern = /(\$\$\n((.|\s|\n)+?)\n\$\$)|(\$([^\s][^$\n]+?[^\s])\$)/gm;
@@ -48,7 +48,7 @@ export class NgeMarkdownKatex implements NgeMarkdownContribution {
         });
     }
 
-    private katex(api: NgeMarkdown) {
+    private katex(api: NgeMarkdownTransformer) {
         if (promise) {
             return promise;
         }

@@ -1,5 +1,5 @@
 import { Injectable, Provider } from '@angular/core';
-import { NgeMarkdown } from '../nge-markdown';
+import { NgeMarkdownTransformer } from '../nge-markdown-transformer';
 import { NgeMarkdownContribution, NGE_MARKDOWN_CONTRIBUTION } from './nge-markdown-contribution';
 
 let TABSET_COUNTER = 0;
@@ -11,9 +11,9 @@ interface Tab {
 
 @Injectable()
 export class NgeMarkdownTabbedSet implements NgeMarkdownContribution {
-    contribute(api: NgeMarkdown) {
+    contribute(api: NgeMarkdownTransformer) {
         this.createStyleSheet();
-        api.addHtmlModifier((element) => {
+        api.addHtmlTransformer((element) => {
             const open = /^===\s*(.+)/;
             const close = /^===\s*$/;
             const processed: Element[] = [];

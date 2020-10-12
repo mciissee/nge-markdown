@@ -7,7 +7,7 @@ import * as marked from 'marked';
 import { NgeMarkdownContribution, NgeMarkdownContributionArgs, NGE_MARKDOWN_CONTRIBUTION_ARGS } from './contributions/nge-markdown-contribution';
 import { MarkedRenderer, MarkedTokenizer } from './marked-types';
 import { NgeMarkdownConfig, NGE_MARKDOWN_CONFIG } from './nge-markdown-config';
-import { NgeMarkdown } from './nge-markdown';
+import { NgeMarkdownTransformer } from './nge-markdown-transformer';
 
 /**
  * Markdown compiler service.
@@ -41,9 +41,9 @@ export class NgeMarkdownService {
             markdown = this.decodeHtml(markdown);
         }
 
-        const api = this.contribute(options);
-        const renderer = await this.createRenderer(api);
-        const tokenizer = await this.createTokenizer(api);
+        const transformer = this.createTransformer(options);
+        const renderer = await this.createRenderer(transformer);
+        const tokenizer = await this.createTokenizer(transformer);
 
         const markedOptions: marked.MarkedOptions = {
             gfm: true,
@@ -53,49 +53,52 @@ export class NgeMarkdownService {
             tokenizer,
         };
 
-        const tokens = await api.computeAst(
-            marked.lexer(markdown, markedOptions)
+        const tokens = await transformer.transformAst(
+            marked.lexer(
+                await transformer.transformMarkdown(markdown),
+                markedOptions
+            )
         );
 
         // COMPUTE THE HTML IN NEW DOCUMENT OBJECT SO SCRIPTS WILL NOT BE EXECUTED
         // DURING THE COMPUTATION
-        const virtualDom = new DOMParser().parseFromString(
+        const dom = new DOMParser().parseFromString(
             marked.parser(
                 tokens,
                 markedOptions
             ),
             'text/html'
         );
-        await api.computeHtml(virtualDom.body);
+        await transformer.transformHTML(dom.body);
 
-        options.target.innerHTML = virtualDom.body.innerHTML;
+        options.target.innerHTML = dom.body.innerHTML;
 
         return tokens;
     }
 
-    private async createRenderer(api: NgeMarkdown) {
-        const renderer = await api.computeRenderer(
+    private async createRenderer(api: NgeMarkdownTransformer) {
+        const renderer = await api.transformRenderer(
             this.config?.renderer || new MarkedRenderer()
         );
         return renderer;
     }
 
-    private async createTokenizer(api: NgeMarkdown) {
-        return await api.computeTokenizer(
+    private async createTokenizer(api: NgeMarkdownTransformer) {
+        return await api.transformTokenizer(
             this.config?.tokenizer || new MarkedTokenizer()
         );
     }
 
-    private contribute(options: NgeMarkdownCompileOptions) {
+    private createTransformer(options: NgeMarkdownCompileOptions) {
         const contributions = [...(options.contributions || [])];
-        const markdown = new NgeMarkdown(
+        const transformer = new NgeMarkdownTransformer(
             this.config,
             this.contribArgs
         );
         contributions.forEach((contrib) => {
-            contrib.contribute(markdown);
+            contrib.contribute(transformer);
         });
-        return markdown;
+        return transformer;
     }
 
     private decodeHtml(html: string): string {
