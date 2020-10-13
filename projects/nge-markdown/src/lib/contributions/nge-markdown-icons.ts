@@ -3,15 +3,15 @@ import { NgeMarkdownTransformer } from '../nge-markdown-transformer';
 import {
     NgeMarkdownContribution,
     NGE_MARKDOWN_CONTRIBUTION
-} from './nge-markdown-contribution';
+} from '../nge-markdown-contribution';
 
 /**
  * Contribution to use icons in markdown library using https://icongr.am/.
  */
 @Injectable()
 export class NgeMarkdownIcons implements NgeMarkdownContribution {
-    contribute(api: NgeMarkdownTransformer) {
-        api.addMarkdownTransformer(async markdown => {
+    contribute(transformer: NgeMarkdownTransformer) {
+        transformer.addMarkdownTransformer(async markdown => {
             const pattern = /@(\w+)\s+([\w-]+)((\s+(?:color|size)=[^\s]+)*?)?@/gm;
             const lines = markdown.split('\n');
             const length = lines.length;
@@ -40,7 +40,7 @@ export class NgeMarkdownIcons implements NgeMarkdownContribution {
 }
 
 /**
- * Provider to use icons in markdown library using https://icongr.am/.
+ * Injection token to register `NgeMarkdownIcons` contribution.
  */
 export const NgeMarkdownIconsProvider: Provider = {
     provide: NGE_MARKDOWN_CONTRIBUTION,

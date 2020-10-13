@@ -4,7 +4,8 @@ import {
     Optional
 } from '@angular/core';
 import * as marked from 'marked';
-import { NgeMarkdownContribution, NgeMarkdownContributionArgs, NGE_MARKDOWN_CONTRIBUTION_ARGS } from './contributions/nge-markdown-contribution';
+import { NgeMarkdownContribution } from './nge-markdown-contribution';
+import { NgeMarkdownDependency, NgeMarkdownContributionService } from './nge-markdown-contribution.service';
 import { MarkedRenderer, MarkedTokenizer } from './marked-types';
 import { NgeMarkdownConfig, NGE_MARKDOWN_CONFIG } from './nge-markdown-config';
 import { NgeMarkdownTransformer } from './nge-markdown-transformer';
@@ -21,12 +22,9 @@ export class NgeMarkdownService {
         @Optional()
         @Inject(NGE_MARKDOWN_CONFIG)
         private readonly config: NgeMarkdownConfig,
-        @Optional()
-        @Inject(NGE_MARKDOWN_CONTRIBUTION_ARGS)
-        private readonly contribArgs: NgeMarkdownContributionArgs,
+        private readonly contribService: NgeMarkdownContributionService,
     ) {
         this.config = config || {};
-        this.contribArgs = contribArgs || {};
     }
 
     /**
@@ -41,9 +39,9 @@ export class NgeMarkdownService {
             markdown = this.decodeHtml(markdown);
         }
 
-        const transformer = this.createTransformer(options);
-        const renderer = await this.createRenderer(transformer);
-        const tokenizer = await this.createTokenizer(transformer);
+        const transformer = await this.transformer(options);
+        const renderer = await this.renderer(transformer);
+        const tokenizer = await this.tokenizer(transformer);
 
         const markedOptions: marked.MarkedOptions = {
             gfm: true,
@@ -76,28 +74,38 @@ export class NgeMarkdownService {
         return tokens;
     }
 
-    private async createRenderer(api: NgeMarkdownTransformer) {
-        const renderer = await api.transformRenderer(
+    private async renderer(transformer: NgeMarkdownTransformer) {
+        const renderer = await transformer.transformRenderer(
             this.config?.renderer || new MarkedRenderer()
         );
         return renderer;
     }
 
-    private async createTokenizer(api: NgeMarkdownTransformer) {
-        return await api.transformTokenizer(
+    private async tokenizer(transformer: NgeMarkdownTransformer) {
+        return await transformer.transformTokenizer(
             this.config?.tokenizer || new MarkedTokenizer()
         );
     }
 
-    private createTransformer(options: NgeMarkdownCompileOptions) {
+
+    private async transformer(options: NgeMarkdownCompileOptions) {
         const contributions = [...(options.contributions || [])];
         const transformer = new NgeMarkdownTransformer(
             this.config,
-            this.contribArgs
         );
-        contributions.forEach((contrib) => {
+
+        const dependencies: NgeMarkdownDependency[] = [];
+        for (const contrib of contributions) {
+            if (contrib.dependencies) {
+                dependencies.push(...(contrib.dependencies() || []));
+            }
             contrib.contribute(transformer);
-        });
+        }
+
+        await this.contribService.loadDependencies(
+            dependencies
+        ).toPromise();
+
         return transformer;
     }
 

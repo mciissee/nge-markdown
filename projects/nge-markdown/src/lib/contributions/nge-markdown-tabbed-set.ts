@@ -1,6 +1,6 @@
 import { Injectable, Provider } from '@angular/core';
 import { NgeMarkdownTransformer } from '../nge-markdown-transformer';
-import { NgeMarkdownContribution, NGE_MARKDOWN_CONTRIBUTION } from './nge-markdown-contribution';
+import { NgeMarkdownContribution, NGE_MARKDOWN_CONTRIBUTION } from '../nge-markdown-contribution';
 
 let TABSET_COUNTER = 0;
 
@@ -9,16 +9,19 @@ interface Tab {
     content: Element[];
 }
 
+/**
+ * Contribution to render tabs inside markdown files.
+ */
 @Injectable()
 export class NgeMarkdownTabbedSet implements NgeMarkdownContribution {
-    contribute(api: NgeMarkdownTransformer) {
-        this.createStyleSheet();
-        api.addHtmlTransformer((element) => {
+    contribute(transformer: NgeMarkdownTransformer) {
+        this.addStyles();
+        transformer.addHtmlTransformer((el) => {
             const open = /^===\s*(.+)/;
             const close = /^===\s*$/;
             const processed: Element[] = [];
             const toRemoves: Element[] = [];
-            element.querySelectorAll('p').forEach((paragraph) => {
+            el.querySelectorAll('p').forEach((paragraph) => {
                 if (processed.indexOf(paragraph) !== -1) {
                     return;
                 }
@@ -98,19 +101,22 @@ export class NgeMarkdownTabbedSet implements NgeMarkdownContribution {
         return tabset;
     }
 
-    private createStyleSheet() {
-        if (document.body.hasAttribute('nge-markdown-tabbed-set')) {
+    private addStyles() {
+        const head = document.head;
+        if (head.querySelector('[nge-markdown-tabbed-set]')) {
             return;
         }
-        document.body.setAttribute('nge-markdown-tabbed-set', '');
 
         const style = document.createElement('style');
+        style.setAttribute('nge-markdown-tabbed-set', '');
         style.innerHTML = `
             /*  TAB SET */
             .nge-md-tabbed-set {
                 display: flex;
                 position: relative;
                 flex-wrap: wrap;
+                margin: 1em 0;
+                border-radius: .1rem;
             }
 
             .nge-md-tabbed-set .highlight {
@@ -156,11 +162,13 @@ export class NgeMarkdownTabbedSet implements NgeMarkdownContribution {
                 border-top: 1px solid #F5F5F5;
             }
         `;
-        document.body.appendChild(style);
+
+        head.appendChild(style);
     }
 
 }
 
+/**  * Injection token to register `NgeMarkdownTabbedSet` contribution. */
 export const NgeMarkdownTabbedSetProvider: Provider = {
     provide: NGE_MARKDOWN_CONTRIBUTION,
     multi: true,

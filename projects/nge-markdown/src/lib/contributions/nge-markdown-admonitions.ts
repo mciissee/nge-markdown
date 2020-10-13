@@ -1,8 +1,6 @@
-// tslint:disable: max-line-length
-
 import { Injectable, Provider } from '@angular/core';
 import { NgeMarkdownTransformer } from '../nge-markdown-transformer';
-import { NgeMarkdownContribution, NGE_MARKDOWN_CONTRIBUTION } from './nge-markdown-contribution';
+import { NgeMarkdownContribution, NGE_MARKDOWN_CONTRIBUTION } from '../nge-markdown-contribution';
 
 const OPEN = /^:::(\+?)\s+(\w+)(\s+.+)?/;
 const CLOSE = /^:::\s*$/;
@@ -12,102 +10,18 @@ const CLOSE = /^:::\s*$/;
  */
 @Injectable()
 export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
-    contribute(api: NgeMarkdownTransformer) {
-        this.insertStylesheet();
-        this.autoBreakLines(api);
-        this.createAdmonitions(api);
+    contribute(transformer: NgeMarkdownTransformer) {
+        this.addStyles();
+        this.autoFixAdmonitionsSyntax(transformer);
+        this.createAdmonitions(transformer);
     }
 
-    private autoBreakLines(api: NgeMarkdownTransformer) {
-        api.addMarkdownTransformer(markdown => {
-            const lines = markdown.split('\n');
-            const length = lines.length;
-            let insideCodeBlock = false;
-            for (let i = 0; i < length; i++) {
-                const curr = lines[i];
-                if (curr.startsWith('```')) {
-                    insideCodeBlock = !insideCodeBlock;
-                }
-                if (insideCodeBlock) {
-                    continue;
-                }
-
-                const prev = i > 0 ? lines[i - 1] : undefined;
-                const next = i < length - 1 ? lines[i + 1] : undefined;
-                if (curr.match(OPEN)) {
-                    if (next?.trim()) {
-                        lines[i] = curr + '\n';
-                    }
-                } else if (curr.match(CLOSE)) {
-                    if (prev?.trim()) {
-                        lines[i] = '\n' + curr;
-                    }
-                }
-            }
-            return lines.join('\n');
-        });
-    }
-
-    private createAdmonitions(api: NgeMarkdownTransformer) {
-        api.addHtmlTransformer((element) => {
-            const paragraphs = element.querySelectorAll('p');
-            paragraphs.forEach((p) => {
-                const text = p.innerHTML;
-                const match = text.match(OPEN);
-                if (match) {
-                    const opener = match[1];
-                    const type = match[2];
-                    const title = (match[3] || '').trim();
-
-                    const admonition = document.createElement('details');
-                    if (opener.endsWith('+')) {
-                        admonition.open = true;
-                    }
-                    admonition.className = 'nge-md-admonition nge-md-admonition--' + type;
-
-                    const summary = document.createElement('summary');
-                    summary.className = 'nge-md-admonition-title';
-                    summary.innerHTML = title;
-
-                    const content: HTMLElement[] = [];
-                    admonition.appendChild(summary);
-
-                    let node = p.nextElementSibling;
-                    let opened = 1;
-                    while (node) {
-                        const innerHTML = node.innerHTML.trim();
-                        if (innerHTML.match(OPEN)) {
-                            opened++;
-                        } else if (innerHTML.match(CLOSE)) {
-                            opened--;
-                            if (opened === 0) {
-                                node.remove();
-                                break;
-                            }
-                        }
-                        content.push(node as HTMLElement);
-                        node = node.nextElementSibling;
-                    }
-
-                    const div = document.createElement('div');
-                    div.className = 'nge-md-admonition-content';
-                    content.forEach((e) => div.appendChild(e));
-                    admonition.appendChild(div);
-
-                    p.parentElement?.insertBefore(admonition, p);
-                    p.remove();
-                }
-            });
-        });
-    }
-
-    private insertStylesheet() {
-        if (document.body.hasAttribute('nge-markdown-admonitions')) {
+    private addStyles() {
+        const head = document.head;
+        if (head.querySelector('[nge-markdown-admonitions]')) {
             return;
         }
-        document.body.setAttribute('nge-markdown-admonitions', '');
 
-        // STYLESHEET
         const admonitions: Record<string, { border: string; bg: string; }> = {
             note: {
                 bg: 'rgba(68, 138, 255, 0.1)',
@@ -262,13 +176,98 @@ export class NgeMarkdownAdmonitions implements NgeMarkdownContribution {
             `);
         });
         const style = document.createElement('style');
+        style.setAttribute('nge-markdown-admonitions', '');
         style.innerHTML = stylesheet.join('\n');
-        document.body.appendChild(style);
+
+        head.appendChild(style);
     }
+
+    private createAdmonitions(transformer: NgeMarkdownTransformer) {
+        transformer.addHtmlTransformer((element) => {
+            const paragraphs = element.querySelectorAll('p');
+            paragraphs.forEach((p) => {
+                const text = p.innerHTML;
+                const match = text.match(OPEN);
+                if (match) {
+                    const opener = match[1];
+                    const type = match[2];
+                    const title = (match[3] || '').trim();
+
+                    const admonition = document.createElement('details');
+                    if (opener.endsWith('+')) {
+                        admonition.open = true;
+                    }
+                    admonition.className = 'nge-md-admonition nge-md-admonition--' + type;
+
+                    const summary = document.createElement('summary');
+                    summary.className = 'nge-md-admonition-title';
+                    summary.innerHTML = title;
+
+                    const content: HTMLElement[] = [];
+                    admonition.appendChild(summary);
+
+                    let node = p.nextElementSibling;
+                    let opened = 1;
+                    while (node) {
+                        const innerHTML = node.innerHTML.trim();
+                        if (innerHTML.match(OPEN)) {
+                            opened++;
+                        } else if (innerHTML.match(CLOSE)) {
+                            opened--;
+                            if (opened === 0) {
+                                node.remove();
+                                break;
+                            }
+                        }
+                        content.push(node as HTMLElement);
+                        node = node.nextElementSibling;
+                    }
+
+                    const div = document.createElement('div');
+                    div.className = 'nge-md-admonition-content';
+                    content.forEach((e) => div.appendChild(e));
+                    admonition.appendChild(div);
+
+                    p.parentElement?.insertBefore(admonition, p);
+                    p.remove();
+                }
+            });
+        });
+    }
+
+    private autoFixAdmonitionsSyntax(transformer: NgeMarkdownTransformer) {
+        transformer.addMarkdownTransformer(markdown => {
+            const lines = markdown.split('\n');
+            const length = lines.length;
+            let insideCodeBlock = false;
+            for (let i = 0; i < length; i++) {
+                const curr = lines[i];
+                if (curr.startsWith('```')) {
+                    insideCodeBlock = !insideCodeBlock;
+                }
+                if (insideCodeBlock) {
+                    continue;
+                }
+                const prev = i > 0 ? lines[i - 1] : undefined;
+                const next = i < length - 1 ? lines[i + 1] : undefined;
+                if (curr.match(OPEN)) {
+                    if (next?.trim()) {
+                        lines[i] = curr + '\n';
+                    }
+                } else if (curr.match(CLOSE)) {
+                    if (prev?.trim()) {
+                        lines[i] = '\n' + curr;
+                    }
+                }
+            }
+            return lines.join('\n');
+        });
+    }
+
 }
 
 /**
- * Provider to add collapsible styled block to markdown syntax.
+ * Injection token to register `NgeMarkdownAdmonitions` contribution.
  */
 export const NgeMarkdownAdmonitionsProvider: Provider = {
     provide: NGE_MARKDOWN_CONTRIBUTION,

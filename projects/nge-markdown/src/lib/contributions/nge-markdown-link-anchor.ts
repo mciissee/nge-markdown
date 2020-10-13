@@ -7,7 +7,7 @@ import { NgeMarkdownTransformer } from '../nge-markdown-transformer';
 import {
     NgeMarkdownContribution,
     NGE_MARKDOWN_CONTRIBUTION
-} from './nge-markdown-contribution';
+} from '../nge-markdown-contribution';
 
 /**
  * Contribution to handle fragment navigation in anchor elements.
@@ -19,8 +19,8 @@ export class NgeMarkdownLinkAnchor implements NgeMarkdownContribution {
         private readonly location: Location,
     ) {}
 
-    contribute(api: NgeMarkdownTransformer) {
-        api.addRendererTransformer(renderer => {
+    contribute(transformer: NgeMarkdownTransformer) {
+        transformer.addRendererTransformer(renderer => {
             renderer.link = (href: string, _: string, text: string) => {
                 const attributes = new Map<string, string>();
                 if (href.startsWith('#')) {
@@ -51,7 +51,7 @@ export class NgeMarkdownLinkAnchor implements NgeMarkdownContribution {
 }
 
 /**
- * Provider to handle fragment navigation in anchor elements.
+ * Injection token to register `NgeMarkdownLinkAnchor` contribution.
  */
 export const NgeMarkdownLinkAnchorProvider: Provider = {
     provide: NGE_MARKDOWN_CONTRIBUTION,

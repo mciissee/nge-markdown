@@ -1,10 +1,19 @@
 import { InjectionToken } from '@angular/core';
-import { NgeMarkdownTransformer } from '../nge-markdown-transformer';
+import { NgeMarkdownDependency } from './nge-markdown-contribution.service';
+import { NgeMarkdownTransformer } from './nge-markdown-transformer';
 
 /**
  * Implements this interface to contribute to nge-markdown.
  */
 export interface NgeMarkdownContribution {
+    /**
+     * List of scripts and styles dependencies to loads
+     * before calling the `transform` methods.
+     *
+     * The dependencies are to be loaded only once.
+     */
+    dependencies?(): NgeMarkdownDependency[];
+
     /**
      * Contributes to nge-markdown api.
      * @param api nge-markdown api.
@@ -12,14 +21,7 @@ export interface NgeMarkdownContribution {
     contribute(api: NgeMarkdownTransformer): void;
 }
 
-export declare type NgeMarkdownContributionArgs = Record<string, any>;
-
 /** Inject this token to get the list of contributions to nge-markdown api.  */
 export const NGE_MARKDOWN_CONTRIBUTION = new InjectionToken<
     NgeMarkdownContribution
 >('NGE_MARKDOWN_CONTRIBUTION');
-
-/** Inject to pass arguments to nge-markdown contributions.  */
-export const NGE_MARKDOWN_CONTRIBUTION_ARGS = new InjectionToken<
-    NgeMarkdownContributionArgs
->('NGE_MARKDOWN_CONTRIBUTION_ARGS');

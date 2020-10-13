@@ -1,4 +1,3 @@
-import { NgeMarkdownContributionArgs } from './contributions/nge-markdown-contribution';
 import { MarkedTokenizer, MarkedRenderer, MarkedTokensList } from './marked-types';
 import { NgeMarkdownConfig } from './nge-markdown-config';
 
@@ -22,8 +21,6 @@ export class NgeMarkdownTransformer {
     constructor(
         /** Configuration option */
         readonly config: NgeMarkdownConfig,
-        /** Contribution arguments */
-        readonly contribArguments: NgeMarkdownContributionArgs,
     ) {}
 
     /**
@@ -197,6 +194,7 @@ export class NgeMarkdownTransformer {
         const script = document.createElement('script');
         script.type = 'text/javascript';
         script.src = url;
+        script.defer = true;
         document.body.appendChild(script);
         return new Promise<any>((resolve, reject) => {
             script.onload = resolve;

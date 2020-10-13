@@ -17,7 +17,7 @@ import {
 import {
     NgeMarkdownContribution,
     NGE_MARKDOWN_CONTRIBUTION,
-} from './contributions/nge-markdown-contribution';
+} from './nge-markdown-contribution';
 import { NgeMarkdownService } from './nge-markdown.service';
 import { MarkedTokensList } from './marked-types';
 

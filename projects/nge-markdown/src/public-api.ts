@@ -3,7 +3,7 @@
  */
 
 export * from './lib/contributions/nge-markdown-admonitions';
-export * from './lib/contributions/nge-markdown-contribution';
+export * from './lib/nge-markdown-contribution';
 export * from './lib/contributions/nge-markdown-emoji';
 export * from './lib/contributions/nge-markdown-highlighter';
 export * from './lib/contributions/nge-markdown-icons';

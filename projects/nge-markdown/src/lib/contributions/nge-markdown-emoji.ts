@@ -1,31 +1,56 @@
-import { Injectable, Provider } from '@angular/core';
+import {
+    Inject,
+    Injectable,
+    InjectionToken,
+    Optional,
+    Provider,
+} from '@angular/core';
 import { NgeMarkdownTransformer } from '../nge-markdown-transformer';
 import {
     NgeMarkdownContribution,
-    NGE_MARKDOWN_CONTRIBUTION
-} from './nge-markdown-contribution';
+    NGE_MARKDOWN_CONTRIBUTION,
+} from '../nge-markdown-contribution';
+import { NgeMarkdownDependency } from '../nge-markdown-contribution.service';
 
-let promise: Promise<any> | undefined;
 
-/** Key of `NgeMarkdownEmoji` arguments in `NgeMarkdownContributionArgs` map. */
-export const NgeMarkdownEmojiArgsKey = 'nge-markdown-emoji';
-
-/** Custom arguments of `NgeMarkdownEmoji` contribution */
-export declare type NgeMarkdownEmojiArgs = {
-    /** joypixels script url. */
-    joypixelsUrl: string;
-    /** Function called once joypixels is loaded */
-    onLoadJoypixels?: (joypixels: any) => void;
+/** Options to pass to `NgeMarkdownEmoji` contribution. */
+export declare type NgeMarkdownEmojiOptions = {
+    /** URL to load joypixels script (default https://cdn.jsdelivr.net/npm/emoji-toolkit@6.0.1/lib/js/joypixels.min.js). */
+    url: string;
 };
+
+/** Injection token to pass custom options to `NgeMarkdownEmoji` contribution. */
+export const NGE_MARKDOWN_EMOJI_OPTIONS = new InjectionToken<
+    NgeMarkdownEmojiOptions
+>('NGE_MARKDOWN_EMOJI_OPTIONS');
 
 /**
  * Contribution to use emoji in markdown using [emoji-toolkit](https://github.com/joypixels/emoji-toolkit) library.
  */
 @Injectable()
 export class NgeMarkdownEmoji implements NgeMarkdownContribution {
-    contribute(api: NgeMarkdownTransformer) {
-        api.addMarkdownTransformer(async markdown => {
-            const joypixels = await this.joypixels(api);
+    constructor(
+        @Optional()
+        @Inject(NGE_MARKDOWN_EMOJI_OPTIONS)
+        private readonly options: NgeMarkdownEmojiOptions
+    ) {
+        this.options = options || {};
+        this.options.url = this.options.url || 'https://cdn.jsdelivr.net/npm/emoji-toolkit@6.0.1/lib/js/joypixels.min.js';
+    }
+
+    dependencies() {
+        const dependencies: NgeMarkdownDependency[] = [];
+        if (!('joypixels' in window)) {
+            dependencies.push(
+                ['script', this.options.url]
+            );
+        }
+        return dependencies;
+    }
+
+    contribute(transformer: NgeMarkdownTransformer) {
+        transformer.addMarkdownTransformer(async (markdown) => {
+            const { joypixels } = window as any;
             const lines = markdown.split('\n');
             const length = lines.length;
             let insideCodeBlock = false;
@@ -42,46 +67,25 @@ export class NgeMarkdownEmoji implements NgeMarkdownContribution {
             return lines.join('\n');
         });
     }
-
-    private joypixels(api: NgeMarkdownTransformer) {
-        if (promise) {
-            return promise;
-        }
-
-        if ('joypixels' in window) {
-            return (promise = Promise.resolve(
-                (window as any).joypixels
-            ));
-        }
-
-        return (promise = new Promise<any>(async (resolve) => {
-            const args = api.contribArguments[NgeMarkdownEmojiArgsKey] as NgeMarkdownEmojiArgs;
-            await Promise.all([
-                api.addScript(
-                    args?.joypixelsUrl || 'https://cdn.jsdelivr.net/npm/emoji-toolkit@6.0.1/lib/js/joypixels.min.js'
-                ),
-            ]);
-            let interval: any;
-            interval = setInterval(() => {
-                const joypixels = (window as any).joypixels;
-                if (joypixels) {
-                    if (args?.onLoadJoypixels) {
-                        args.onLoadJoypixels(joypixels);
-                    }
-                    resolve(joypixels);
-                    clearInterval(interval);
-                }
-            }, 300);
-        }));
-    }
-
 }
 
 /**
- * Provider to use emoji in markdown using [emoji-toolkit](https://github.com/joypixels/emoji-toolkit) library.
+ * Provider to register `NgeMarkdownEmoji` contribution.
  */
 export const NgeMarkdownEmojiProvider: Provider = {
     provide: NGE_MARKDOWN_CONTRIBUTION,
     multi: true,
     useClass: NgeMarkdownEmoji,
 };
+
+/**
+ * Provider to pass options to `NgeMarkdownEmoji` contribution.
+ * @param options `NgeMarkdownEmoji` options.
+ */
+export function NgeMarkdownEmojiOptionsProvider(options: NgeMarkdownEmojiOptions): Provider {
+    return {
+        provide: NGE_MARKDOWN_EMOJI_OPTIONS,
+        multi: true,
+        useValue: options,
+    };
+}
