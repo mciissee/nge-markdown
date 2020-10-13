@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import * as marked from 'marked';
 import { NgeMarkdownContribution } from './nge-markdown-contribution';
-import { NgeMarkdownDependency, NgeMarkdownContributionService } from './nge-markdown-contribution.service';
+import { NgeMarkdownContributionService } from './nge-markdown-contribution.service';
 import { MarkedRenderer, MarkedTokenizer } from './marked-types';
 import { NgeMarkdownConfig, NGE_MARKDOWN_CONFIG } from './nge-markdown-config';
 import { NgeMarkdownTransformer } from './nge-markdown-transformer';
@@ -94,7 +94,7 @@ export class NgeMarkdownService {
             this.config,
         );
 
-        const dependencies: NgeMarkdownDependency[] = [];
+        const dependencies = [];
         for (const contrib of contributions) {
             if (contrib.dependencies) {
                 dependencies.push(...(contrib.dependencies() || []));

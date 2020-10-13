@@ -10,14 +10,13 @@ import {
     NgeMarkdownContribution,
     NGE_MARKDOWN_CONTRIBUTION,
 } from '../nge-markdown-contribution';
-import { NgeMarkdownDependency } from '../nge-markdown-contribution.service';
 
 
 /** Options to pass to `NgeMarkdownEmoji` contribution. */
-export declare type NgeMarkdownEmojiOptions = {
+export interface NgeMarkdownEmojiOptions {
     /** URL to load joypixels script (default https://cdn.jsdelivr.net/npm/emoji-toolkit@6.0.1/lib/js/joypixels.min.js). */
     url: string;
-};
+}
 
 /** Injection token to pass custom options to `NgeMarkdownEmoji` contribution. */
 export const NGE_MARKDOWN_EMOJI_OPTIONS = new InjectionToken<
@@ -39,13 +38,13 @@ export class NgeMarkdownEmoji implements NgeMarkdownContribution {
     }
 
     dependencies() {
-        const dependencies: NgeMarkdownDependency[] = [];
+        const deps: any[] = [];
         if (!('joypixels' in window)) {
-            dependencies.push(
+            deps.push(
                 ['script', this.options.url]
             );
         }
-        return dependencies;
+        return deps;
     }
 
     contribute(transformer: NgeMarkdownTransformer) {

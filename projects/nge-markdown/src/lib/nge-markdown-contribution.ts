@@ -1,5 +1,4 @@
 import { InjectionToken } from '@angular/core';
-import { NgeMarkdownDependency } from './nge-markdown-contribution.service';
 import { NgeMarkdownTransformer } from './nge-markdown-transformer';
 
 /**
@@ -12,7 +11,7 @@ export interface NgeMarkdownContribution {
      *
      * The dependencies are to be loaded only once.
      */
-    dependencies?(): NgeMarkdownDependency[];
+    dependencies?(): ['style'|'script', string][];
 
     /**
      * Contributes to nge-markdown api.

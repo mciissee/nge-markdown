@@ -3,6 +3,8 @@ import { Inject, Injectable } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
 import { shareReplay, take } from 'rxjs/operators';
 
+declare type NgeMarkdownDependency = ['style'|'script', string, Record<string, string>?];
+
 @Injectable({
     providedIn: 'root'
 })
@@ -11,7 +13,7 @@ export class NgeMarkdownContributionService {
 
     constructor(
         @Inject(DOCUMENT)
-        private document: Document
+        private document: any
     ) {}
 
     /**
@@ -127,5 +129,3 @@ export class NgeMarkdownContributionService {
         });
     }
 }
-
-export declare type NgeMarkdownDependency = ['style'|'script', string, Record<string, string>?];

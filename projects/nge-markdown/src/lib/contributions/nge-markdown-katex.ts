@@ -1,5 +1,5 @@
 import { Inject, Injectable, InjectionToken, Optional, Provider } from '@angular/core';
-import { NgeMarkdownDependency, NgeMarkdownContributionService } from '../nge-markdown-contribution.service';
+import { NgeMarkdownContributionService } from '../nge-markdown-contribution.service';
 import { NgeMarkdownTransformer } from '../nge-markdown-transformer';
 import {
     NgeMarkdownContribution,
@@ -7,7 +7,7 @@ import {
 } from '../nge-markdown-contribution';
 
 /** Custom options to pass to NgeMarkdownKatex contribution. */
-export declare type NgeMarkdownKatexOptions = {
+export interface NgeMarkdownKatexOptions {
     /** Base url to load katex scripts and styles. (default https://cdn.jsdelivr.net/npm/katex@0.12.0/dist) */
     baseUrl?: string;
     /** Options to pass to katex render function. https://katex.org/docs/options.html */
@@ -18,8 +18,8 @@ export declare type NgeMarkdownKatexOptions = {
         mhchem?: boolean;
         /** https://github.com/Khan/KaTeX/tree/master/contrib/copy-tex (default to `true`) */
         copyTex?: boolean;
-    }
-};
+    };
+}
 
 /** Custom options to pass to NgeMarkdownKatex contribution. */
 export const NGE_MARKDOWN_KATEX_OPTIONS = new InjectionToken<
@@ -58,7 +58,7 @@ export class NgeMarkdownKatex implements NgeMarkdownContribution {
             baseUrl += '/';
         }
 
-        const deps: NgeMarkdownDependency[] = [
+        const deps = [
             ['style', `${baseUrl}katex.min.css`],
             ['script', `${baseUrl}katex.min.js`],
             ['script', `${baseUrl}contrib/auto-render.min.js`],
@@ -76,14 +76,14 @@ export class NgeMarkdownKatex implements NgeMarkdownContribution {
                 ['script', `${baseUrl}contrib/mhchem.min.js`]
             );
         }
-        return deps;
+
+        return deps as any;
     }
 
     contribute(transformer: NgeMarkdownTransformer) {
         // pattern to search multiline latex between $$...$$ or inline latex between $...$
         // const pattern = /(\$\$\n((.|\s|\n)+?)\n\$\$)|(\$([^\s][^$\n]+?[^\s])\$)/gm;
         transformer.addHtmlTransformer(async (element) => {
-            await this.ensureKatexIsLoaded();
             const { renderMathInElement } = window as any;
             renderMathInElement(element, this.options.options || {
                 delimiters: [
@@ -96,37 +96,6 @@ export class NgeMarkdownKatex implements NgeMarkdownContribution {
         });
     }
 
-    private ensureKatexIsLoaded() {
-        if ('katex' in window)  {
-            return Promise.resolve();
-        }
-
-        let baseUrl = this.options?.baseUrl || 'https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/';
-        if (!baseUrl.endsWith('/')) {
-            baseUrl += '/';
-        }
-
-        const resources: NgeMarkdownDependency[] = [
-            ['style', `${baseUrl}katex.min.css`],
-            ['script', `${baseUrl}katex.min.js`],
-            ['script', `${baseUrl}contrib/auto-render.min.js`],
-        ];
-
-        if (this.options.extensions?.copyTex) {
-            resources.push(
-                ['style', `${baseUrl}contrib/copy-tex.min.css`],
-                ['script', `${baseUrl}contrib/copy-tex.min.js`],
-            );
-        }
-
-        if (this.options.extensions?.mhchem) {
-            resources.push(
-                ['script', `${baseUrl}contrib/mhchem.min.js`]
-            );
-        }
-
-        return this.lazy.loadDependencies(resources).toPromise();
-    }
 }
 
 /**
