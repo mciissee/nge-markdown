@@ -1,8 +1,7 @@
 # Icons
 
-Icons contribution add the possibility to use more than 10000 icons in your project documentation with practically zero additional effort.
-
-The icons are integrated using [icongr](https://icongr.am) library.
+**Icons** contribution add the possibility to use more than 10000 icons in your project documentation with practically zero additional effort.
+The icons are downloaded on demand from [icongr](https://icongr.am).
 
 ## Configuration
 
@@ -36,7 +35,7 @@ export class AppModule {}
 ## Usage
 
 Icons can be integrated in Markdown by putting between `@` the name of any of the icon libraries
-supported by [icongr](https://icongr.am) followed the name of an icon.
+supported by [icongr](https://icongr.am) followed by the name of an icon.
 
 Example:
 

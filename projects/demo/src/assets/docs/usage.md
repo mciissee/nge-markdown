@@ -108,26 +108,24 @@ This is a simple markdown from a file
 ===
 
 :::+ note ngPreserveWhitespaces
-
 As of Angular 6, the template compiler strips whitespace by default. Use `ngPreserveWhitespaces` directive to preserve whitespaces such as newlines in order for the markdown-formatted content to render as intended.
 https://angular.io/api/core/Component#preserveWhitespaces
+:::
 
+:::+ note Escape html when using transclusion
+Characters such as &lt;, &gt;, {, } directly written in the HTML template file must be escaped so that the compiler doesn't try to bind it as regular Angular code.
 :::
 
 :::+ note Theming
-
 When you use `<nge-markdown></nge-markdown>` component a default theme is applied
 to the generated markdown. The theme is inspired from [github theme](https://github.com/sindresorhus/github-markdown-css/blob/gh-pages/github-markdown.css).
 
 If you don't want this theme to be applied, you can set the `[theme]` input to `'none'`.
-
 :::
 
 :::+ note NgeMarkdownService
-
 You can also use the `NgeMarkdownService` service to compile the markdown yourself if you don't want to use 
 `<nge-markdown></nge-markdown>` component.
-
 :::
 
 ## Options
@@ -168,10 +166,8 @@ export class AppModule { }
 ```
 
 :::+ note Note
-
 The properties `highlight` and `langPrefix` are from the MarkedOptions object because they are used by the nge-markdown lib itself
 so you cannot override theses properties.
-
 :::
 
 You can also use a factory provider in the case where you want to compute

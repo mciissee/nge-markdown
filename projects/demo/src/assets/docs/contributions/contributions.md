@@ -87,11 +87,6 @@ a callback function to call during the different phases of the parsing.
 * `addHtmlTransformer` method can be used to register a function that will compute the html generated
   by the marked [parser](https://marked.js.org/using_pro#parser).
 
-### NgeMarkdownContributionArgs
-
-The contribution API allow you pass custom arguments to the contributions using the `NGE_MARKDOWN_CONTRIBUTION_ARGS` token.
-
-
 ## Example
 
 === my-contrib.ts
@@ -104,13 +99,21 @@ import {
     NGE_MARKDOWN_CONTRIBUTION,
 } from 'nge-markdown';
 
-export const MyMarkdownContributionArgsKey = 'my-contribution';
-export declare type MyMarkdownContributionArgs = {
-    myArg1?: string;
-};
-
 @Injectable()
 export class MyMarkdownContribution implements NgeMarkdownContribution {
+
+    dependencies() {
+      if ('katex' in window) {
+        return [];
+      }
+      // add katex to document head if needed.
+      // this ensure that katex is available inside the transform methods.
+      return [
+        ['style', 'https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css'],
+        ['script', 'https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.js'],
+      ];
+    }
+
     contribute(api: NgeMarkdownTransformer) {
         const args = api.contribArguments[MyMarkdownContributionArgsKey] || {} as MyMarkdownContributionArgs;
         console.log(args.myArg1);

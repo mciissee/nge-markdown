@@ -69,9 +69,9 @@ const documentation: NgeDocSettings = {
                     renderer: 'assets/docs/contributions/' + snakecase + '.md',
                     actions: [
                         {
-                            title: 'Source code',
+                            title: 'View source',
                             icon: 'https://icongr.am/octicons/code.svg',
-                            run: base + snakecase + '.ts',
+                            run: base + 'nge-markdown-' +  snakecase + '.ts',
                         },
                         editInGithubAction('contributions/' + snakecase + '.md'),
                     ]

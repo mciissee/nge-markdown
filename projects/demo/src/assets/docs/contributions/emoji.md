@@ -1,8 +1,16 @@
 # Emoji
 
-Emoji contribution add the possibility to use a thousands of emojis in your project documentation with practically zero additional effort.
+**Emoji** contribution add the possibility to use a thousands of emojis in your project documentation.
+There are two ways to add emoji to markdown files:
 
-The emojis are integrated using [emoji-toolkit](https://github.com/joypixels/emoji-toolkit) library.
+* **copy and paste the emoji into your markdown.**
+
+  This is the solution you will choose in the most cases, you can simply copy an emoji from a source like [Emojipedia](https://emojipedia.org/)
+  and paste it into your document and skip the configuration section.
+
+* **type emoji shortcodes.**
+
+  If you choose this solution, you must read the configuration section to config the contribution.
 
 ## Configuration
 
@@ -33,11 +41,12 @@ import { AppComponent } from './app.component';
 export class AppModule {}
 ```
 
-### Arguments
+## Options
 
-Emoji contribution can accepts arguments from **NGE_MARKDOWN_CONTRIBUTION_ARGS**.
+The contribution use [emoji-toolkit](https://github.com/joypixels/emoji-toolkit) render emoji from shortcodes and load it from a cdn with the default options.
+But you can load the library from another domain by providing a value to `NGE_MARKDOWN_EMOJI_OPTIONS` injection token.
 
-```typescript highlights="6-13 22 26-38"
+```typescript highlights="6-10 19 23-24"
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -46,10 +55,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
   NgeMarkdownModule,
   NgeMarkdownEmojiProvider,
-  NgeMarkdownEmojiArgs,
-  NgeMarkdownEmojiArgsKey,
-  NgeMarkdownContributionArgs,
-  NGE_MARKDOWN_CONTRIBUTION_ARGS,
+  NgeMarkdownEmojiOptionsProvider,
 } from 'nge-markdown';
 
 import { AppComponent } from './app.component';
@@ -64,18 +70,7 @@ import { AppComponent } from './app.component';
   ],
   providers: [
     NgeMarkdownEmojiProvider,
-    {
-      provide: NGE_MARKDOWN_CONTRIBUTION_ARGS,
-      useValue: {
-        [NgeMarkdownEmojiArgsKey]: {
-          // url to load on when required joypixels library (default https://cdn.jsdelivr.net/npm/emoji-toolkit@6.0.1/lib/js/joypixels.min.js)
-          joypixelsUrl: '....',
-          onLoadJoypixels: (joypixels: any) => {
-            console.log(joypixels)
-          }
-        } as NgeMarkdownEmojiArgs
-      }
-    }
+    NgeMarkdownEmojiOptionsProvider({ url: 'assets/scripts/joypixels.min.js' })
   ],
   bootstrap: [AppComponent],
 })
@@ -85,7 +80,8 @@ export class AppModule {}
 ## Usage
 
 Emojis can be integrated in Markdown by putting the shortcode of the emoji between two colons.
-You can look up the shortcodes at [Emojipedia](https://emojipedia.org/joypixels/).
+You can refer to this [Emoji Cheat Sheet](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md)
+or [Emojipedia](https://emojipedia.org/joypixels/) for a complete list of shortcodes.
 
 Example:
 

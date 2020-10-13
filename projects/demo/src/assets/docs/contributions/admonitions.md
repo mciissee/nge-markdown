@@ -1,8 +1,8 @@
 # Admonitions
 
-Admonitions, also known as call-outs, are an excellent choice for including side content without significantly interrupting the document flow. _nge-markdown_ provides several different types of admonitions and allows for the inclusion and nesting of arbitrary content.
+**Admonitions**, also known as call-outs, are an excellent choice for including side content without significantly interrupting the document flow. _nge-markdown_ provides several different types of admonitions and allows for the inclusion and nesting of arbitrary content.
 
-> The examples from this page are based on https://squidfunk.github.io/mkdocs-material/reference/admonitions/
+> The examples from this page are based on <https://squidfunk.github.io/mkdocs-material/reference/admonitions/>
 
 ## Configuration
 
@@ -35,8 +35,8 @@ export class AppModule {}
 
 ## Usage
 
-Admonitions follow a simple syntax: a block must start with *:::* followed by a single keyword which is used as the type qualifier of the block.
-The content of the block then follows on the next line, then a closing block :::
+**Admonitions** follow a simple syntax: a block must start with `:::` followed by a single keyword which is used as the type qualifier of the block.
+The content of the block then follows on the next line, then a closing block `:::`
 
 Example
 
@@ -88,25 +88,25 @@ Admonitions can contain all kinds of text content, including headlines, lists, p
 
 Example:
 
-```plaintext
+````plaintext
 :::+ note Phasellus **posuere** in sem ut cursus
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla et euismod
 nulla. Curabitur feugiat, tortor non consequat finibus, justo purus auctor
 massa, nec semper lorem quam in massa.
 
-\``` python
+``` python
 def bubble_sort(items):
     for i in range(len(items)):
         for j in range(len(items) - 1 - i):
             if items[j] > items[j + 1]:
                 items[j], items[j + 1] = items[j + 1], items[j]
-\```
+```
 
 Nunc eu odio eleifend, blandit leo a, volutpat sapien. Phasellus posuere in
 sem ut cursus. Nullam sit amet tincidunt ipsum, sit amet elementum turpis.
 Etiam ipsum quam, mattis in purus vitae, lacinia fermentum enim.
 :::
-```
+````
 
 Result:
 
