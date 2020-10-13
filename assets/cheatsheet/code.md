@@ -2,14 +2,24 @@ Inline `code` has `back-ticks around` it.
 
 `print("Hello world")`
 
-```javascript lines="1"
+```javascript
 var s = "JavaScript syntax highlighting";
 alert(s);
 ```
 
-```python highlights="1"
-s = "Python syntax highlighting"
-print s
+```python lines="1"
+s = "Show line numbers starting at 1"
+print(s)
+```
+
+```python highlights="2"
+s = "Highlight line 2"
+print(s)
+```
+
+```python highlights="1-2"
+s = "Highlight range"
+print(s)
 ```
 
 ```

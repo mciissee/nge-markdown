@@ -7,3 +7,9 @@ $$
 ## Inline
 
 $c = \\pm\\sqrt&#123;a^2 + b^2&#125;$
+
+## Chemistry
+
+$\ce{CO2 + C -> 2 CO}$
+
+<https://mhchem.github.io/MathJax-mhchem/>

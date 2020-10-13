@@ -1,3 +1,17 @@
-@octicons verified color=ff0000 size=32@
+* Simple icon:
 
-@fontawesome address-book color=ff0000 size=32@
+@octicons verified@
+
+* Sized icon:
+
+@fontawesome address-book size=64@
+
+* Colored icon:
+
+@clarity avatar color=ff0000@
+
+* Both:
+
+@devicon illustrator-plain size=64 color=ff0000@
+
+https://icongr.am/
