@@ -124,7 +124,7 @@ If you don't want this theme to be applied, you can set the `[theme]` input to `
 :::
 
 :::+ note NgeMarkdownService
-You can also use the `NgeMarkdownService` service to compile the markdown yourself if you don't want to use 
+You can also use the `NgeMarkdownService` service to compile the markdown yourself if you don't want to use
 `<nge-markdown></nge-markdown>` component.
 :::
 
@@ -166,7 +166,7 @@ export class AppModule { }
 ```
 
 :::+ note Note
-The properties `highlight` and `langPrefix` are from the MarkedOptions object because they are used by the nge-markdown lib itself
+The properties `highlight` and `langPrefix` are removed from the MarkedOptions object because they are used by the nge-markdown lib itself
 so you cannot override theses properties.
 :::
 

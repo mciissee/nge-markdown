@@ -5,7 +5,7 @@
 Open a terminal and clone this repository
 
 ```bash
-git clone https://github.com/mciissee/nge-markown
+git clone https://github.com/mciissee/nge-markdown
 ```
 
 Go to nge-doc folder

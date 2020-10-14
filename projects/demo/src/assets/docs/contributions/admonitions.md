@@ -1,6 +1,6 @@
 # Admonitions
 
-**Admonitions**, also known as call-outs, are an excellent choice for including side content without significantly interrupting the document flow. _nge-markdown_ provides several different types of admonitions and allows for the inclusion and nesting of arbitrary content.
+**Admonitions**, also known as call-outs, are an excellent choice for including side content without significantly interrupting the document flow. nge-markdown provides several different types of admonitions and allows for the inclusion and nesting of arbitrary content.
 
 > The examples from this page are based on <https://squidfunk.github.io/mkdocs-material/reference/admonitions/>
 
