@@ -84,7 +84,6 @@ export const NgeMarkdownEmojiProvider: Provider = {
 export function NgeMarkdownEmojiOptionsProvider(options: NgeMarkdownEmojiOptions): Provider {
     return {
         provide: NGE_MARKDOWN_EMOJI_OPTIONS,
-        multi: true,
         useValue: options,
     };
 }

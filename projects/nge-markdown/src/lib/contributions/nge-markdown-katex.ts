@@ -1,5 +1,4 @@
 import { Inject, Injectable, InjectionToken, Optional, Provider } from '@angular/core';
-import { NgeMarkdownContributionService } from '../nge-markdown-contribution.service';
 import { NgeMarkdownTransformer } from '../nge-markdown-transformer';
 import {
     NgeMarkdownContribution,
@@ -32,7 +31,6 @@ export const NGE_MARKDOWN_KATEX_OPTIONS = new InjectionToken<
 @Injectable()
 export class NgeMarkdownKatex implements NgeMarkdownContribution {
     constructor(
-        private readonly lazy: NgeMarkdownContributionService,
         @Optional()
         @Inject(NGE_MARKDOWN_KATEX_OPTIONS)
         private readonly options: NgeMarkdownKatexOptions
@@ -84,7 +82,7 @@ export class NgeMarkdownKatex implements NgeMarkdownContribution {
         // pattern to search multiline latex between $$...$$ or inline latex between $...$
         // const pattern = /(\$\$\n((.|\s|\n)+?)\n\$\$)|(\$([^\s][^$\n]+?[^\s])\$)/gm;
         transformer.addHtmlTransformer(async (element) => {
-            const { renderMathInElement } = window as any;
+           /*  const { renderMathInElement } = window as any;
             renderMathInElement(element, this.options.options || {
                 delimiters: [
                     { left: '$$', right: '$$', display: false },
@@ -92,7 +90,7 @@ export class NgeMarkdownKatex implements NgeMarkdownContribution {
                     { left: '\\(', right: '\\)', display: false },
                     { left: '\\[', right: '\\]', display: false },
                 ],
-            });
+            }); */
         });
     }
 
@@ -114,7 +112,6 @@ export const NgeMarkdownKatexProvider: Provider = {
 export function NgeMarkdownKatexOptionsProvider(options: NgeMarkdownKatexOptions): Provider {
     return {
         provide: NGE_MARKDOWN_KATEX_OPTIONS,
-        multi: true,
         useValue: options,
     };
 }
