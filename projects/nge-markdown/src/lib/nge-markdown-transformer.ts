@@ -1,11 +1,11 @@
 import { MarkedTokenizer, MarkedRenderer, MarkedTokensList } from './marked-types';
 import { NgeMarkdownConfig } from './nge-markdown-config';
 
-declare type AstTransformer = (tokens: MarkedTokensList) => MarkedTokensList | Promise<MarkedTokensList>;
-declare type HtmlTransformer = (element: HTMLElement) => void | Promise<void>;
-declare type MarkdownTransformer = (markdown: string) => string | Promise<string>;
-declare type RendererTransformer = (renderer: MarkedRenderer) => MarkedRenderer | Promise<MarkedRenderer>;
-declare type TokenizerTransformer = (tokenizer: MarkedTokenizer) => MarkedTokenizer | Promise<MarkedTokenizer>;
+declare type AstTransformer = (tokens: MarkedTokensList) => MarkedTokensList;
+declare type HtmlTransformer = (element: HTMLElement) => void;
+declare type MarkdownTransformer = (markdown: string) => string;
+declare type RendererTransformer = (renderer: MarkedRenderer) => MarkedRenderer;
+declare type TokenizerTransformer = (tokenizer: MarkedTokenizer) => MarkedTokenizer;
 
 /**
  * Nge markdown transformer used by the contributions.
@@ -89,13 +89,13 @@ export class NgeMarkdownTransformer {
      * @param ast the ast to transform.
      * @returns the transformed ast.
      */
-    async transformAst(ast: MarkedTokensList): Promise<MarkedTokensList> {
+    transformAst(ast: MarkedTokensList): MarkedTokensList {
         if (ast == null) {
             throw new ReferenceError('argument "ast" is required');
         }
 
-        for (const transform of this.astTransformers) {
-            ast = await transform(ast);
+        for (const fn of this.astTransformers) {
+            ast = fn(ast);
         }
 
         return ast;
@@ -106,13 +106,13 @@ export class NgeMarkdownTransformer {
      * @param element the html element to transform.
      * @returns the transformed html.
      */
-    async transformHTML(element: HTMLElement): Promise<HTMLElement> {
+    transformHTML(element: HTMLElement) {
         if (element == null) {
             throw new ReferenceError('argument "html" is required');
         }
 
-        for (const transform of this.htmlTransformers) {
-            await transform(element);
+        for (const fn of this.htmlTransformers) {
+            fn(element);
         }
 
         return element;
@@ -123,13 +123,13 @@ export class NgeMarkdownTransformer {
      * @param markdown the markdown to transform.
      * @returns the transformed markdown.
      */
-    async transformMarkdown(markdown: string): Promise<string> {
+    transformMarkdown(markdown: string): string {
         if (markdown == null) {
             throw new ReferenceError('argument "markdown" is required');
         }
 
-        for (const transform of this.markdownTransformers) {
-            markdown = await transform(markdown);
+        for (const fn of this.markdownTransformers) {
+            markdown = fn(markdown);
         }
 
         return markdown;
@@ -140,13 +140,13 @@ export class NgeMarkdownTransformer {
      * @param renderer the renderer to transform.
      * @returns the transformed renderer.
      */
-    async transformRenderer(renderer: MarkedRenderer): Promise<MarkedRenderer> {
+    transformRenderer(renderer: MarkedRenderer): MarkedRenderer {
         if (renderer == null) {
             throw new ReferenceError('argument "renderer" is required');
         }
 
-        for (const compute of this.rendererTransformers) {
-            renderer = await compute(renderer);
+        for (const fn of this.rendererTransformers) {
+            renderer = fn(renderer);
         }
 
         return renderer;
@@ -157,13 +157,13 @@ export class NgeMarkdownTransformer {
      * @param tokenizer the tokenizer to transform.
      * @returns the transformed tokenizer.
      */
-    async transformTokenizer(tokenizer: MarkedTokenizer): Promise<MarkedTokenizer> {
+    transformTokenizer(tokenizer: MarkedTokenizer): MarkedTokenizer {
         if (tokenizer == null) {
             throw new ReferenceError('argument "tokenizer" is required');
         }
 
-        for (const transform of this.tokenizerTransformers) {
-            tokenizer = await transform(tokenizer);
+        for (const fn of this.tokenizerTransformers) {
+            tokenizer = fn(tokenizer);
         }
 
         return tokenizer;

@@ -149,7 +149,7 @@ export class NgeMarkdownHighlighter implements NgeMarkdownContribution {
                 element.querySelectorAll(`pre[${DATA_LANGUAGE}]`)
             );
             for (const pre of preElements) {
-                await highlight(this.injector, {
+                highlight(this.injector, {
                     lines: pre.getAttribute(DATA_LINES) || '',
                     element: pre.querySelector('code') as HTMLElement,
                     language: pre.getAttribute(DATA_LANGUAGE) || 'plaintext',
@@ -185,24 +185,20 @@ export function NgeMarkdownHighlighterMonacoProvider(type: Type<any>) {
     return {
         provide: NGE_MARKDOWN_HIGHLIGHTER_SERVICE,
         useValue: {
-            highligtht: async (injector, options) => {
+            highligtht: (injector, options) => {
                 const colorizer = injector.get(type, null);
                 const code = options.element;
                 const pre = code.parentElement as HTMLElement;
-                await colorizer?.colorizeElement({
+                pre.style.margin = '0.5em 0';
+                pre.style.overflow = 'auto';
+                pre.style.border = '1px solid #F2F2F2';
+                colorizer?.colorizeElement({
                     element: code,
                     language: options.language,
                     code: code.textContent,
                     lines: options.lines,
                     highlights: options.highlights
                 });
-                if (!pre.classList.contains('monaco-editor')) {
-                    pre.classList.add('monaco-editor');
-                    pre.classList.add('monaco-editor-background');
-                }
-                pre.style.margin = '0.5em 0';
-                pre.style.overflow = 'auto';
-                pre.style.border = '1px solid #F2F2F2';
             }
         } as NgeMarkdownHighlighterService
     };

@@ -48,7 +48,7 @@ export class NgeMarkdownEmoji implements NgeMarkdownContribution {
     }
 
     contribute(transformer: NgeMarkdownTransformer) {
-        transformer.addMarkdownTransformer(async (markdown) => {
+        transformer.addMarkdownTransformer((markdown) => {
             const { joypixels } = window as any;
             const lines = markdown.split('\n');
             const length = lines.length;

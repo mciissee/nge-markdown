@@ -11,7 +11,7 @@ import {
 @Injectable()
 export class NgeMarkdownIcons implements NgeMarkdownContribution {
     contribute(transformer: NgeMarkdownTransformer) {
-        transformer.addMarkdownTransformer(async markdown => {
+        transformer.addMarkdownTransformer(markdown => {
             const pattern = /@(\w+)\s+([\w-]+)((\s+(?:color|size)=[^\s]+)*?)?@/gm;
             const lines = markdown.split('\n');
             const length = lines.length;

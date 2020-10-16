@@ -39,9 +39,9 @@ export class NgeMarkdownService {
             markdown = this.decodeHtml(markdown);
         }
 
-        const transformer = await this.transformer(options);
-        const renderer = await this.renderer(transformer);
-        const tokenizer = await this.tokenizer(transformer);
+        const transformer = await this.createTransformer(options);
+        const renderer = this.renderer(transformer);
+        const tokenizer = this.tokenizer(transformer);
 
         const markedOptions: marked.MarkedOptions = {
             gfm: true,
@@ -51,43 +51,25 @@ export class NgeMarkdownService {
             tokenizer,
         };
 
-        const tokens = await transformer.transformAst(
-            marked.lexer(
-                await transformer.transformMarkdown(markdown),
-                markedOptions
-            )
+        markdown = transformer.transformMarkdown(markdown);
+
+        const tokens = transformer.transformAst(
+            marked.lexer(markdown, markedOptions)
         );
 
-        // COMPUTE THE HTML IN NEW DOCUMENT OBJECT SO SCRIPTS WILL NOT BE EXECUTED
-        // DURING THE COMPUTATION
-        const dom = new DOMParser().parseFromString(
-            marked.parser(
-                tokens,
-                markedOptions
-            ),
-            'text/html'
+        options.target.innerHTML = marked.parser(
+            tokens,
+            markedOptions
         );
-        await transformer.transformHTML(dom.body);
 
-        options.target.innerHTML = dom.body.innerHTML;
+        transformer.transformHTML(
+            options.target
+        );
 
         return tokens;
     }
 
-    private async renderer(transformer: NgeMarkdownTransformer) {
-        const renderer = await transformer.transformRenderer(
-            this.config?.renderer || new MarkedRenderer()
-        );
-        return renderer;
-    }
-
-    private async tokenizer(transformer: NgeMarkdownTransformer) {
-        return await transformer.transformTokenizer(
-            this.config?.tokenizer || new MarkedTokenizer()
-        );
-    }
-
-    private async transformer(options: NgeMarkdownCompileOptions) {
+    private async createTransformer(options: NgeMarkdownCompileOptions) {
         const contributions = [...(options.contributions || [])];
         const transformer = new NgeMarkdownTransformer(
             this.config,
@@ -106,6 +88,19 @@ export class NgeMarkdownService {
         ).toPromise();
 
         return transformer;
+    }
+
+    private renderer(transformer: NgeMarkdownTransformer) {
+        const renderer = transformer.transformRenderer(
+            this.config?.renderer || new MarkedRenderer()
+        );
+        return renderer;
+    }
+
+    private tokenizer(transformer: NgeMarkdownTransformer) {
+        return transformer.transformTokenizer(
+            this.config?.tokenizer || new MarkedTokenizer()
+        );
     }
 
     private decodeHtml(html: string): string {

@@ -81,8 +81,8 @@ export class NgeMarkdownKatex implements NgeMarkdownContribution {
     contribute(transformer: NgeMarkdownTransformer) {
         // pattern to search multiline latex between $$...$$ or inline latex between $...$
         // const pattern = /(\$\$\n((.|\s|\n)+?)\n\$\$)|(\$([^\s][^$\n]+?[^\s])\$)/gm;
-        transformer.addHtmlTransformer(async (element) => {
-            const { renderMathInElement, katex } = window as any;
+        transformer.addHtmlTransformer((element) => {
+            const { renderMathInElement } = window as any;
             try {
                 renderMathInElement(element, this.options.options || {
                     delimiters: [
@@ -93,7 +93,7 @@ export class NgeMarkdownKatex implements NgeMarkdownContribution {
                     ],
                 });
             } catch (error) {
-                console.log(renderMathInElement, katex, error)
+                console.error(error);
             }
         });
     }

@@ -3,7 +3,6 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
-    ContentChild,
     ElementRef,
     EventEmitter,
     HostBinding,
@@ -12,7 +11,6 @@ import {
     OnChanges,
     Optional,
     Output,
-    ViewChild,
 } from '@angular/core';
 import {
     NgeMarkdownContribution,
