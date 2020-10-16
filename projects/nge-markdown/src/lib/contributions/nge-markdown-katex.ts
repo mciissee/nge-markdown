@@ -58,8 +58,8 @@ export class NgeMarkdownKatex implements NgeMarkdownContribution {
 
         const deps = [
             ['style', `${baseUrl}katex.min.css`],
-            ['script', `${baseUrl}katex.min.js`],
-            ['script', `${baseUrl}contrib/auto-render.min.js`],
+            ['script', `${baseUrl}katex.js`],
+            ['script', `${baseUrl}contrib/auto-render.js`],
         ];
 
         if (this.options.extensions?.copyTex) {
@@ -71,7 +71,7 @@ export class NgeMarkdownKatex implements NgeMarkdownContribution {
 
         if (this.options.extensions?.mhchem) {
             deps.push(
-                ['script', `${baseUrl}contrib/mhchem.min.js`]
+                ['script', `${baseUrl}contrib/mhchem.js`]
             );
         }
 
@@ -82,15 +82,19 @@ export class NgeMarkdownKatex implements NgeMarkdownContribution {
         // pattern to search multiline latex between $$...$$ or inline latex between $...$
         // const pattern = /(\$\$\n((.|\s|\n)+?)\n\$\$)|(\$([^\s][^$\n]+?[^\s])\$)/gm;
         transformer.addHtmlTransformer(async (element) => {
-           /*  const { renderMathInElement } = window as any;
-            renderMathInElement(element, this.options.options || {
-                delimiters: [
-                    { left: '$$', right: '$$', display: false },
-                    { left: '$', right: '$', display: false },
-                    { left: '\\(', right: '\\)', display: false },
-                    { left: '\\[', right: '\\]', display: false },
-                ],
-            }); */
+            const { renderMathInElement, katex } = window as any;
+            try {
+                renderMathInElement(element, this.options.options || {
+                    delimiters: [
+                        { left: '$$', right: '$$', display: false },
+                        { left: '$', right: '$', display: false },
+                        { left: '\\(', right: '\\)', display: false },
+                        { left: '\\[', right: '\\]', display: false },
+                    ],
+                });
+            } catch (error) {
+                console.log(renderMathInElement, katex, error)
+            }
         });
     }
 

@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import * as marked from 'marked';
 import { NgeMarkdownContribution } from './nge-markdown-contribution';
-import { NgeMarkdownContributionService } from './nge-markdown-contribution.service';
+import { AssetLoaderService } from './utils/asset-loader.service';
 import { MarkedRenderer, MarkedTokenizer } from './marked-types';
 import { NgeMarkdownConfig, NGE_MARKDOWN_CONFIG } from './nge-markdown-config';
 import { NgeMarkdownTransformer } from './nge-markdown-transformer';
@@ -22,7 +22,7 @@ export class NgeMarkdownService {
         @Optional()
         @Inject(NGE_MARKDOWN_CONFIG)
         private readonly config: NgeMarkdownConfig,
-        private readonly contribService: NgeMarkdownContributionService,
+        private readonly assetLoader: AssetLoaderService,
     ) {
         this.config = config || {};
     }
@@ -87,7 +87,6 @@ export class NgeMarkdownService {
         );
     }
 
-
     private async transformer(options: NgeMarkdownCompileOptions) {
         const contributions = [...(options.contributions || [])];
         const transformer = new NgeMarkdownTransformer(
@@ -102,7 +101,7 @@ export class NgeMarkdownService {
             contrib.contribute(transformer);
         }
 
-        await this.contribService.loadDependencies(
+        await this.assetLoader.loadAllSync(
             dependencies
         ).toPromise();
 
@@ -137,7 +136,6 @@ export class NgeMarkdownService {
             })
             .join('\n');
     }
-
 }
 
 /**
