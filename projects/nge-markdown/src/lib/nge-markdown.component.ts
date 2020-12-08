@@ -60,8 +60,8 @@ export class NgeMarkdownComponent implements OnChanges, AfterViewInit {
     ngOnChanges(): void {
         if (this.file) {
             this.renderFromFile(this.file);
-        } else if (this.data) {
-            this.renderFromString(this.data);
+        } else {
+            this.renderFromString(this.data || '');
         }
     }
 
