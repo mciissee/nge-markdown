@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/mciissee/nge-markdown/compare/v1.1.0...v1.1.1) (2020-12-08)
+
+
+### Bug Fixes
+
+* can only have one anonymous define call per script file ([b63b1ef](https://github.com/mciissee/nge-markdown/commit/b63b1efb0466259dbb59d88e85a62ce91605be2b))
+* markdown-component not cleared [#2](https://github.com/mciissee/nge-markdown/issues/2) ([271b866](https://github.com/mciissee/nge-markdown/commit/271b86665196e13c4a5232a3c323aa4cf37e1b94))
+
 ## 1.1.0 (2020-10-16)
 
 
