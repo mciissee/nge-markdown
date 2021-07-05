@@ -1,5 +1,7 @@
 # Getting started
 
+## **This is no longer supported, please consider using [@mcisse/nge](https://github.com/mciissee/nge) instead**
+
 nge-markdown is an [Angular](https://angular.io) markdown parser library based on [Marked](https://github.com/markedjs/marked) project.
 
 ## Demonstration
